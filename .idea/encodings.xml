@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_3.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/custom_bg_2.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/custom_bg_22.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/custome_bg_1.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/exit.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/home.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/innerlayout.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/main_bg.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
