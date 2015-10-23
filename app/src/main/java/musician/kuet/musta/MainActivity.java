@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -27,21 +28,23 @@ class Mp3Filter implements FilenameFilter {
 	public boolean accept(File dir, String name){
 		//return (name.endsWith(".mp3") || name.endsWith(".wma"));
 
-		if (name.endsWith(".mp3") || name.endsWith(".wma") || name.endsWith(".wav") || name.endsWith(".m4a") || name.endsWith(".amr") || name.endsWith(".flac") || name.endsWith(".m4p"))
+		if (name.endsWith(".mp3") || name.endsWith(".wma") || name.endsWith(".wav") || name.endsWith(".m4a")
+					|| name.endsWith(".amr") || name.endsWith(".flac") || name.endsWith(".m4p"))
 			return true;
 		else
 			return false;
 	}
 }
 
-
 public class MainActivity extends ListActivity {
 	//private static final String MEDIA_PATH = new String(Environment.getExternalStorageDirectory().getPath());
-	private static final String MEDIA_PATH = new String("/sdcard/musics/");
+	private static final String MEDIA_PATH = new String("/sdcard/music/");
 	private List<String> songs = new ArrayList<String>();
 	private MediaPlayer player = new MediaPlayer();
 	private int currentPosition = 0;
-	Button seek;
+	Button seek, pause;
+	SeekBar seekBar;
+	int lenOfCurrentSong, mediaPos, mediaMax;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -49,10 +52,47 @@ public class MainActivity extends ListActivity {
 			updateSongList();
 		final Button stop = (Button) findViewById(R.id.stop);
 		seek = (Button) findViewById(R.id.seek);
+		pause = (Button) findViewById(R.id.pause);
+		seekBar = (SeekBar) findViewById(R.id.seekBar);
+		mediaPos = player.getCurrentPosition();
+		mediaMax = player.getDuration();
+		seekBar.setMax(mediaMax);
+		seekBar.setProgress(mediaPos);
+
 		stop.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				player.pause();
+				player.reset();
+				if (player.isPlaying() == false)
+				{
+					pause.setText("Play");
+					Toast.makeText(MainActivity.this, songs.get(currentPosition)+" is Stopped", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		pause.setOnClickListener(new View.OnClickListener() {
+			int counter = 1;
+			@Override
+			public void onClick(View v) {
+				if(counter % 2 == 1){
+					player.pause();
+					if (player.isPlaying() == false)
+					{
+						pause.setText("Play");
+						Toast.makeText(MainActivity.this, songs.get(currentPosition)+" is Paused", Toast.LENGTH_SHORT).show();
+					}
+					lenOfCurrentSong = player.getCurrentPosition();
+				}
+				else{
+					player.seekTo(lenOfCurrentSong);
+					player.start();
+					if (player.isPlaying() == true)
+					{
+						pause.setText("Pause");
+						Toast.makeText(MainActivity.this, songs.get(currentPosition)+" is resumed", Toast.LENGTH_LONG).show();
+					}
+				}
+				counter++;
 			}
 		});
 	}
@@ -81,6 +121,10 @@ public class MainActivity extends ListActivity {
 			player.setDataSource(songPath);
 			player.prepare();
 			player.start();
+			if (player.isPlaying() == true){
+				pause.setText("Pause");
+				Toast.makeText(MainActivity.this, songs.get(currentPosition)+" is Playing", Toast.LENGTH_SHORT).show();
+			}
 			seek.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

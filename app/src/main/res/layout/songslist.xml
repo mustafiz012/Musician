@@ -12,15 +12,36 @@
 
     <TextView android:id="@id/android:empty"
               android:layout_width="fill_parent"
-              android:layout_height="521dp"
+              android:layout_height="356dp"
               android:text="No songs found on SD Card."/>
-    <Button android:layout_width="fill_parent"
-            android:id="@+id/stop"
-            android:text="Stop"
-            android:layout_height="wrap_content"/>
-    <Button android:layout_width="wrap_content"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/seek"
-            android:text="Tunnel"
-            android:layout_height="wrap_content"/>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:weightSum="100"
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="wrap_content"
+                android:id="@+id/stop"
+                android:layout_weight="50"
+                android:text="Stop"
+                android:layout_height="wrap_content"/>
+        <Button android:layout_width="wrap_content"
+                android:id="@+id/pause"
+                android:text="Pause"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:weightSum="100"
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="wrap_content"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/seek"
+                android:layout_weight="0"
+                android:text="Tunnel"
+                android:layout_height="wrap_content"/>
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
 </LinearLayout>
