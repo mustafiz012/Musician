@@ -1,46 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="#0099cc"
              tools:context="musician.kuet.musta.NowPlaying">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <TextView android:id="@+id/fullscreen_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:keepScreenOn="true"
-              android:textColor="#33b5e5"
-              android:textStyle="bold"
-              android:textSize="50sp"
-              android:gravity="center"
-              android:text="@string/dummy_content"/>
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:fitsSystemWindows="true">
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="||"
+        android:id="@+id/playPause"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
-        <LinearLayout android:id="@+id/fullscreen_content_controls"
-                      style="?metaButtonBarStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="bottom|center_horizontal"
-                      android:background="@color/black_overlay"
-                      android:orientation="horizontal"
-                      tools:ignore="UselessParent">
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="&lt;&lt;"
+        android:id="@+id/leftSeeking"
+        android:layout_alignTop="@+id/playPause"
+        android:layout_toLeftOf="@+id/playPause"
+        android:layout_toStartOf="@+id/playPause" />
 
-            <Button android:id="@+id/dummy_button"
-                    style="?metaButtonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/dummy_button"/>
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text=">>"
+        android:id="@+id/rightSeeking"
+        android:layout_alignTop="@+id/playPause"
+        android:layout_toRightOf="@+id/playPause"
+        android:layout_toEndOf="@+id/playPause" />
 
-        </LinearLayout>
-    </FrameLayout>
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text=">|"
+        android:id="@+id/next"
+        android:layout_alignBottom="@+id/rightSeeking"
+        android:layout_toRightOf="@+id/rightSeeking"
+        android:layout_toEndOf="@+id/rightSeeking" />
 
-</FrameLayout>
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="|&lt;"
+        android:id="@+id/previous"
+        android:layout_alignTop="@+id/leftSeeking"
+        android:layout_toLeftOf="@+id/leftSeeking"
+        android:layout_toStartOf="@+id/leftSeeking" />
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="93dp"
+        android:indeterminate="false" />
+</RelativeLayout>
