@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -60,6 +61,8 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
 		player.start();
 		bar.setMax(player.getDuration());
 		seekBarUpdating.start();
+		if (player.isPlaying())
+			Log.i("Song", "" + songs.get(position).toString());
 
 		bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override

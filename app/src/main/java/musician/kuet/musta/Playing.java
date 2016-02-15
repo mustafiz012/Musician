@@ -14,13 +14,15 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Playing extends ActionBarActivity {
 
     private static final String TAG = null;
     String[] songItems;
+    String testItems;
     ListView songList;
-    File internal, external, externalStorageRoot;
+    File internal, external, externalStorageRoot, temp;
     File[] filess;
     int counter =0;
     @Override
@@ -34,38 +36,47 @@ public class Playing extends ActionBarActivity {
 
 
 
-//        final String state = Environment.getExternalStorageState();
-//
-//        if ( Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state) ) {  // we can read the External Storage...
-//            //Retrieve the primary External Storage:
-//            final File primaryExternalStorage = Environment.getExternalStorageDirectory();
-//
-//            //Retrieve the External Storages root directory:
-//            final String externalStorageRootDir;
-//            if ( (externalStorageRootDir = primaryExternalStorage.getParent()) == null ) {  // no parent...
-//                Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
-//            }
-//            else {
-//                 externalStorageRoot = new File( externalStorageRootDir );
-//                 filess = externalStorageRoot.listFiles();
-//                for ( final File file : filess ) {
-//                    if ( file.isDirectory() && file.canRead() && (file.listFiles().length > 0) ) {  // it is a real directory (not a USB drive)...
-//                        Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
-//                    }
-//                }
-//            }
-//        }
+        final String state = Environment.getExternalStorageState();
 
+        if ( Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state) ) {  // we can read the External Storage...
+            //Retrieve the primary External Storage:
+            final File primaryExternalStorage = Environment.getExternalStorageDirectory();
+
+            //Retrieve the External Storages root directory:
+            final String externalStorageRootDir;
+            if ( (externalStorageRootDir = primaryExternalStorage.getParent()) == null ) {  // no parent...
+                Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
+            }
+            else {
+                 externalStorageRoot = new File( externalStorageRootDir );
+                 filess = externalStorageRoot.listFiles();
+                for ( final File file : filess ) {
+                    if ( file.isDirectory() && file.canRead() && (file.listFiles().length > 0) ) {  // it is a real directory (not a USB drive)...
+                        Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
+                        //customToast("" + file.getAbsolutePath());
+                        counter++;
+                        if (counter == 1){
+                            testItems = file.getAbsolutePath();
+                            customToast(""+testItems);
+                        }
+                    }
+                }
+            }
+        }
+
+        
 
         for (int j=1; j <= 2; j++){
 
             internal = Environment.getExternalStorageDirectory();
             String temp_External = "/mnt/extSdCard";
             //internal = new File(temp_Internal);
-            external = new File(temp_External);
+            external = new File(testItems);
             final ArrayList<File> songs = updateSongList(internal);
             final ArrayList<File> song2 = updateSongList(external);
+            //final ArrayList<File> temporary = updateSongList(temp);
             songs.addAll(song2);
+            //songs.addAll(temporary);
 
             songItems = new String[songs.size()];
             for (int i = 0; i < songs.size(); i++){
