@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,12 +12,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class Playing extends ActionBarActivity {
 
+    private static final String TAG = null;
     String[] songItems;
     ListView songList;
+    File internal, external, externalStorageRoot;
+    File[] filess;
+    int counter =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,26 +30,63 @@ public class Playing extends ActionBarActivity {
         ArrayList<File> root = new ArrayList<File>();
         songList = (ListView) findViewById(R.id.lvSongList);
 
-        final ArrayList<File> songs = updateSongList(Environment.getExternalStorageDirectory());
-        songItems = new String[songs.size()];
-        for (int i = 0; i < songs.size(); i++){
-            //customToast(songs.get(i).getName().toString());
-            songItems[i] = songs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
+
+
+
+
+//        final String state = Environment.getExternalStorageState();
+//
+//        if ( Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state) ) {  // we can read the External Storage...
+//            //Retrieve the primary External Storage:
+//            final File primaryExternalStorage = Environment.getExternalStorageDirectory();
+//
+//            //Retrieve the External Storages root directory:
+//            final String externalStorageRootDir;
+//            if ( (externalStorageRootDir = primaryExternalStorage.getParent()) == null ) {  // no parent...
+//                Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
+//            }
+//            else {
+//                 externalStorageRoot = new File( externalStorageRootDir );
+//                 filess = externalStorageRoot.listFiles();
+//                for ( final File file : filess ) {
+//                    if ( file.isDirectory() && file.canRead() && (file.listFiles().length > 0) ) {  // it is a real directory (not a USB drive)...
+//                        Log.d(TAG, "External Storage: " + file.getAbsolutePath() + "\n");
+//                    }
+//                }
+//            }
+//        }
+
+
+        for (int j=1; j <= 2; j++){
+
+            internal = Environment.getExternalStorageDirectory();
+            String temp_External = "/mnt/extSdCard";
+            //internal = new File(temp_Internal);
+            external = new File(temp_External);
+            final ArrayList<File> songs = updateSongList(internal);
+            final ArrayList<File> song2 = updateSongList(external);
+            songs.addAll(song2);
+
+            songItems = new String[songs.size()];
+            for (int i = 0; i < songs.size(); i++){
+                //customToast(songs.get(i).getName().toString());
+                songItems[i] = songs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.song_layout, R.id.songListText, songItems);
+            songList.setAdapter(adapter);
+            songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    startActivity(new Intent(getApplicationContext(), NowPlaying.class).putExtra("pos", position).putExtra("songs", songs));
+                }
+            });
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.song_layout, R.id.songListText, songItems);
-        songList.setAdapter(adapter);
-        songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getApplicationContext(), NowPlaying.class).putExtra("pos", position).putExtra("songs", songs));
 
-            }
-        });
     }
 
     public void customToast(String text){
-        Toast.makeText(getApplicationContext(),text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),text, Toast.LENGTH_LONG).show();
     }
     //reading all files from sdCard using ArrayList<>
     public ArrayList<File> updateSongList(File root){

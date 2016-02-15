@@ -36,7 +36,7 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
 				int currentPosition = 0;
 				while (currentPosition < totalDuration){
 					try {
-						sleep(500);
+						sleep(700);
 						currentPosition = player.getCurrentPosition();
 						bar.setProgress(currentPosition);
 					} catch (InterruptedException e) {
