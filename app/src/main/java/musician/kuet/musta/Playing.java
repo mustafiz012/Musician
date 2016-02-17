@@ -115,4 +115,11 @@ public class Playing extends ActionBarActivity {
         return arrayList;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+
 }
