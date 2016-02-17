@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.os.Handler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -114,23 +115,20 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                Log.i("auto: ", "working");
+                //Playing next song automatically
+                mp.reset();
+                position = (position + 1)%songs.size();
+                uri = Uri.parse(songs.get(position).toString());
+                try {
+                    mp.setDataSource(getApplicationContext(), uri);
+                    mp.prepare();
+                    mp.start();
+                    updateSongInfo();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-//                Log.i("test", "here: " + songs.get(position + 1).getName());
-//                mp.stop();
-//                mp.reset();
-//                mp.release();
-//                try {
-//                    position = (position + 1)%songs.size();
-//                    uri = Uri.parse(songs.get(position).toString());
-//                    mp = MediaPlayer.create(getApplicationContext(), uri);
-//                    mp.start();
-//                    Log.i("test", "here: " + songs.get(position).getName());
-//                    updateSongInfo();
-//                } catch (IllegalArgumentException e){
-//                    e.printStackTrace();
-//                } catch (IllegalStateException e){
-//                    e.printStackTrace();
-//                }
             }
         });
 
@@ -175,6 +173,8 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
             }
         }
     };
+
+
 
     public void updateSongInfo(){
         playPause.setText("||");

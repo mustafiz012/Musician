@@ -32,10 +32,6 @@ public class Playing extends ActionBarActivity {
         ArrayList<File> root = new ArrayList<File>();
         songList = (ListView) findViewById(R.id.lvSongList);
 
-
-
-
-
         final String state = Environment.getExternalStorageState();
 
         if ( Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state) ) {  // we can read the External Storage...
