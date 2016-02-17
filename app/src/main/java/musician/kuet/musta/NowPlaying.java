@@ -28,6 +28,8 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
     TextView currentSong, leftDuratoin, rightDuration;
     private double startTime = 0;
     private double finalTime = 0;
+    long currentPosition = 0;
+    long totalDuration = 0;
     private Handler myHandler = new Handler();
     public static int oneTimeOnly = 0;
 
@@ -51,32 +53,29 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
 
 		initialization();
 
-		seekBarUpdating = new Thread(){
-			@Override
-			public void run() {
-				long totalDuration = player.getDuration();
-				long currentPosition = 0;
-				while (currentPosition+100 < totalDuration){
-					try {
-                        //Log.e("duration", ""+currentPosition+"\n"+totalDuration);
-						sleep(100);
-						currentPosition = player.getCurrentPosition();
-						bar.setProgress((int) currentPosition);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e){
-                        e.printStackTrace();
-                    }catch (IllegalAccessError e){
-                        e.printStackTrace();
-                    } catch (IllegalStateException e){
-                        e.printStackTrace();
-                    }
-				}
-				//super.run();
-			}
-		};
-
 		player = new MediaPlayer();
+
+        seekBarUpdating = new Thread(){
+            @Override
+            public void run() {
+                totalDuration = player.getDuration();
+                currentPosition = 0;
+                while (currentPosition+100 < totalDuration){
+                        try {
+                            sleep(100);
+                            currentPosition = player.getCurrentPosition();
+                            bar.setProgress((int) currentPosition);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IllegalArgumentException e){
+                            e.printStackTrace();
+                        } catch (IllegalStateException e){
+                            e.printStackTrace();
+                        }
+                    }
+                //autoStart();
+            }
+        };
 
 		if (player != null){
 			player.stop();
@@ -116,40 +115,62 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
             @Override
             public void onCompletion(MediaPlayer mp) {
 
-                Log.i("test", "here: " + songs.get(position + 1).getName());
-                mp.stop();
-                mp.reset();
-                mp.release();
-                try {
-                    position = (position + 1)%songs.size();
-                    uri = Uri.parse(songs.get(position).toString());
-                    mp = MediaPlayer.create(getApplicationContext(), uri);
-                    mp.start();
-                    Log.i("test", "here: " + songs.get(position).getName());
-                    updateSongInfo();
-                } catch (IllegalArgumentException e){
-                    e.printStackTrace();
-                } catch (IllegalStateException e){
-                    e.printStackTrace();
-                }
+//                Log.i("test", "here: " + songs.get(position + 1).getName());
+//                mp.stop();
+//                mp.reset();
+//                mp.release();
+//                try {
+//                    position = (position + 1)%songs.size();
+//                    uri = Uri.parse(songs.get(position).toString());
+//                    mp = MediaPlayer.create(getApplicationContext(), uri);
+//                    mp.start();
+//                    Log.i("test", "here: " + songs.get(position).getName());
+//                    updateSongInfo();
+//                } catch (IllegalArgumentException e){
+//                    e.printStackTrace();
+//                } catch (IllegalStateException e){
+//                    e.printStackTrace();
+//                }
             }
         });
 
 	}
-    private Runnable UpdateSongTime = new Runnable() {
+
+    private void autoStart() {
+        try {
+            player.stop();
+            player.reset();
+            player.release();
+            playPause.setText("*");
+            position = (position + 1)%songs.size();
+            uri = Uri.parse(songs.get(position).toString());
+            player = MediaPlayer.create(getApplicationContext(), uri);
+            player.start();
+            updateSongInfo();
+            playPause.setText("||");
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
+    }
+
+    private Runnable UpdateSongTimeT = new Runnable() {
+        @Override
         public void run() {
             try {
                 startTime = player.getCurrentPosition();
                 leftDuratoin.setText(String.format("%d:%d",
-
                                 TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                                 TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
                                                 toMinutes((long) startTime)))
                 );
-                bar.setProgress((int)startTime);
+                bar.setProgress((int) startTime);
                 myHandler.postDelayed(this, 100);
             }catch (IllegalStateException e){
+                e.printStackTrace();
+            }catch (IllegalArgumentException e){
                 e.printStackTrace();
             }
         }
@@ -158,28 +179,26 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
     public void updateSongInfo(){
         playPause.setText("||");
         finalTime = player.getDuration();
-        startTime = player.getCurrentPosition();
         bar.setMax((int) finalTime);
-        bar.setProgress(0);
-        currentSong.setText(""+songs.get(position).getName().replace(".mp3", "").replace(".MP3", "").replace(".wav", "").replace(".WAV", ""));
+        //bar.setProgress(0);
+        currentSong.setText(""+songs.get(position).getName().replace(".mp3", "").replace(".MP3", "").replace(".wav", "").replace(".WAV", "").replace("_", " "));
 
         //setting player button
         if (!player.isPlaying()){
             playPause.setText("|>");
         }
-
         rightDuration.setText(String.format("%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime)))
         );
-        leftDuratoin.setText(String.format("%d:%d",
-                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) startTime)))
-        );
-        //bar.setProgress((int) startTime);
-        myHandler.postDelayed(UpdateSongTime, 100);
+//        leftDuratoin.setText(String.format("%d:%d",
+//                        TimeUnit.MILLISECONDS.toMinutes(currentPosition),
+//                        TimeUnit.MILLISECONDS.toSeconds(currentPosition) -
+//                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentPosition)))
+//        );
+        bar.setProgress((int) startTime);
+        myHandler.postDelayed(UpdateSongTimeT, 100);
     }
 
 	public void initialization(){
@@ -260,12 +279,12 @@ public class NowPlaying extends ActionBarActivity implements View.OnClickListene
                 }
 				break;
 			case R.id.leftSeeking:
-				player.seekTo(player.getCurrentPosition() - 5000);
+				player.seekTo((int) (currentPosition - 5000));
 				//player.start();
 				break;
 			case R.id.rightSeeking:
 				try {
-                    player.seekTo(player.getCurrentPosition() + 5000);
+                    player.seekTo((int) (currentPosition + 5000));
                 }catch (IllegalStateException e){
                     e.printStackTrace();
                 }
