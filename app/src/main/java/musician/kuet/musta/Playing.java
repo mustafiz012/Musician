@@ -148,7 +148,8 @@ public class Playing extends Activity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+		Log.i("onPause:","Playing");
+        //finish();
     }
 
 

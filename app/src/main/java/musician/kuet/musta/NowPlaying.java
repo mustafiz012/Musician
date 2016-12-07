@@ -225,7 +225,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 //		rightSeek = (Button) findViewById(R.id.rightSeeking);
         playPause = (Button) findViewById(R.id.playPause);
         currentSong = (TextView) findViewById(R.id.currentSong);
-        leftDuration = (TextView) findViewById(R.id.leftDuratoin);
+        leftDuration = (TextView) findViewById(R.id.leftDuration);
         rightDuration = (TextView) findViewById(R.id.rightDuration);
         goToSongList = (Button) findViewById(R.id.songList);
         shuffle = (Button) findViewById(R.id.shuffle);
