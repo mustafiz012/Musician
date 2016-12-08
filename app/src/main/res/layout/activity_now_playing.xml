@@ -79,7 +79,7 @@
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/play_one"/>
+                android:background="@drawable/pause_second"/>
 
             <Button
                 android:id="@+id/next"
@@ -108,7 +108,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:text="0.0"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/accent_material_dark"/>
 
             <TextView
                 android:id="@+id/rightDuration"
@@ -117,7 +118,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:text="0.0"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/accent_material_dark"/>
         </RelativeLayout>
 
 

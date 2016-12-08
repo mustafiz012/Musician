@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
+        android:id="@+id/songListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_bg_2"
-        android:paddingBottom="5dp"
+        android:background="@color/dim_foreground_disabled_material_dark"
+        android:paddingBottom="2dp"
         android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:textColor="#000000"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:paddingTop="2dp"
         android:text="Large Text"
-        android:id="@+id/songListText" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000000"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/secondary_text_default_material_dark"/>
 </LinearLayout>
