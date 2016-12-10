@@ -6,10 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +33,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class NowPlaying extends Activity implements View.OnClickListener, MediaPlayer.OnCompletionListener {
-	static boolean active = false, shuffleOn = false, isRepeatOneOn = false, isRepeatOn = false, isDialogAOk = false;
+	static boolean active = false, shuffleFlag = false, isRepeatOneOn = false, isRepeatOn = false, isDialogAOk = false;
 
 	SeekBar bar;
 	Button preSong, nextSong, leftSeek, rightSeek, playPause, goToSongList, shuffle, repeat, nowPlayingSongs;
@@ -38,7 +41,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 	String[] songItemss;
 	ArrayList<File> songs;
 	ArrayAdapter<String> adapter;
-	int position, shuffleCounter = 0, repeatCounter = 0;
+	int position;
 	Uri uri;
 	Thread seekBarUpdating;
 	TextView currentSong, leftDuration, rightDuration;
@@ -54,6 +57,12 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 	protected void onStart() {
 		super.onStart();
 		Log.i("start ", "true");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadPlayerStates();
 	}
 
 	@Override
@@ -78,10 +87,47 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		Log.i("stop ", "false");
 	}
 
+	public void savePlayerStates(String key, boolean value){
+		SharedPreferences playerStates = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor playerStatesEditor = playerStates.edit();
+		playerStatesEditor.putBoolean(key, value);
+		playerStatesEditor.commit();
+	}
+
+	public void loadPlayerStates() {
+		SharedPreferences playerStates = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean shuffleOn = playerStates.getBoolean("shuffleOn", false);
+		boolean repeatOn = playerStates.getBoolean("repeatOn", false);
+		boolean repeatOneOn = playerStates.getBoolean("repeatOneOn", false);
+		if (shuffleOn) {
+			shuffleFlag = true;
+			shuffle.setBackgroundResource(R.mipmap.shuffle);
+		} else {
+			shuffleFlag = false;
+			shuffle.setBackgroundResource(R.mipmap.shuffle_off);
+		}
+		if (repeatOn && !repeatOneOn) {
+			isRepeatOn = true;
+			isRepeatOneOn = false;
+			repeat.setBackgroundResource(R.mipmap.repeat);
+		} else if (repeatOneOn && !repeatOn) {
+			isRepeatOneOn = true;
+			isRepeatOn = false;
+			repeat.setBackgroundResource(R.mipmap.repeat_one);
+		} else {
+			isRepeatOn = false;
+			isRepeatOneOn = false;
+			repeat.setBackgroundResource(R.mipmap.repeat_off);
+		}
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		Log.i("NowPlaying ", "onPause called");
+		savePlayerStates("shuffleOn", shuffleFlag);
+		savePlayerStates("repeatOn", isRepeatOn);
+		savePlayerStates("repeatOneOn", isRepeatOneOn);
 		openActivityNotification(getApplicationContext());
 		active = true;
 	}
@@ -107,6 +153,8 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 		//all objects declaration here
 		initialization();
+
+		loadPlayerStates();
 
 
 		//for updating the current song duration
@@ -196,12 +244,11 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 
 	public void updateSongInfo(int thisOne) {
-		playPause.setBackgroundResource(R.drawable.pause_one);
+		playPause.setBackgroundResource(R.drawable.pause_second);
 		finalTime = player.getDuration();
 		bar.setMax((int) finalTime);
 		//bar.setProgress(0);
 		currentSong.setText("" + songs.get(thisOne).getName().replace(".mp3", "").replace(".MP3", "").replace(".wav", "").replace(".WAV", "").replace("_", " "));
-
 		//setting player button
 		if (!player.isPlaying()) {
 			playPause.setBackgroundResource(R.drawable.play_one);
@@ -295,7 +342,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 				try {
 					player.stop();
 					player.reset();
-					if (shuffleOn == true) {
+					if (shuffleFlag) {
 						position = randomPosition.nextInt((songs.size() - 0) + 0);
 					} else {
 						position = (position + 1) % songs.size();
@@ -310,7 +357,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 					Log.i("position ", "" + position);
 					player.start();
 					updateSongInfo(position);
-					playPause.setBackgroundResource(R.drawable.pause_one);
+					playPause.setBackgroundResource(R.drawable.pause_second);
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalStateException e) {
@@ -324,13 +371,13 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 					player.reset();
 					Log.i("Previous ", "" + position);
 					if (position - 1 < 0) {
-						if (shuffleOn == true) {
+						if (shuffleFlag) {
 							position = randomPosition.nextInt((songs.size() - 0) + 0);
 						} else {
 							position = songs.size() - 1;
 						}
 					} else {
-						if (shuffleOn == true)
+						if (shuffleFlag)
 							position = randomPosition.nextInt((songs.size() - 0) + 0);
 						else
 							position--;
@@ -343,7 +390,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					playPause.setBackgroundResource(R.drawable.pause_one);
+					playPause.setBackgroundResource(R.drawable.pause_second);
 					Log.i("position ", "" + position);
 					player.start();
 					updateSongInfo(position);
@@ -373,34 +420,34 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 			}
 			//shuffling
 			case R.id.shuffle: {
-				shuffleCounter++;
-				if (shuffleCounter % 2 == 1) {
+				if (!shuffleFlag) {
 					shuffle.setBackgroundResource(R.mipmap.shuffle);
 					Toast.makeText(NowPlaying.this, "Shuffle On", Toast.LENGTH_SHORT).show();
-					shuffleOn = true;
+					shuffleFlag = true;
 				} else {
 					shuffle.setBackgroundResource(R.mipmap.shuffle_off);
 					Toast.makeText(NowPlaying.this, "Shuffle Off", Toast.LENGTH_SHORT).show();
-					shuffleOn = false;
+					shuffleFlag = false;
 				}
 				break;
 			}
 			//repeating
 			case R.id.repeat: {
-				repeatCounter++;
-				if (repeatCounter == 1) {
+				if (!isRepeatOn && !isRepeatOneOn) {
 					isRepeatOn = true;
+					isRepeatOneOn = false;
 					Toast.makeText(NowPlaying.this, "Repeat On", Toast.LENGTH_SHORT).show();
 					repeat.setBackgroundResource(R.mipmap.repeat);
-				} else if (repeatCounter == 2) {
+				} else if (isRepeatOn && !isRepeatOneOn) {
 					isRepeatOneOn = true;
+					isRepeatOn = false;
 					Toast.makeText(NowPlaying.this, "RepeatOne On", Toast.LENGTH_SHORT).show();
 					repeat.setBackgroundResource(R.mipmap.repeat_one);
-				} else if (repeatCounter == 3) {
+				} else {
 					repeat.setBackgroundResource(R.mipmap.repeat_off);
 					Toast.makeText(NowPlaying.this, "Repeat Off", Toast.LENGTH_SHORT).show();
 					isRepeatOn = false;
-					repeatCounter = 0;
+					isRepeatOneOn = false;
 				}
 				break;
 			}
@@ -465,13 +512,13 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		updateSongInfoFromDialog(position);
 		Log.i("dialog index:", "" + position);
 
-		if (shuffleOn == true && isRepeatOneOn == false) {
+		if (shuffleFlag && !isRepeatOneOn) {
 			position = randomPosition.nextInt((songs.size() - 0) + 0);
-		} else if (shuffleOn == true && isRepeatOn == true) {
+		} else if (shuffleFlag && isRepeatOn) {
 			position = randomPosition.nextInt((songs.size() - 0) + 0);
-		} else if ((shuffleOn == false && isRepeatOn == true) || (shuffleOn == false && isRepeatOn == false) || isRepeatOn == true) {
+		} else if ((!shuffleFlag && isRepeatOn) || (!shuffleFlag && !isRepeatOn) || isRepeatOn) {
 			position = (position + 1) % songs.size();
-		} else if (isRepeatOneOn == true) {
+		} else if (isRepeatOneOn) {
 			position = currentSongPosition;
 		}
 		uri = Uri.parse(songs.get(position).toString());

@@ -1,9 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/now_playing_parent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#093458"
+              android:orientation="vertical"
                 tools:context="musician.kuet.musta.NowPlaying">
 
 
@@ -21,19 +22,38 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/actionbar_back"/>
 
-        <TextView
-            android:id="@+id/currentSong"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/songList"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/songList"
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"/>
+
+        <HorizontalScrollView
+            android:scrollbarSize="0dp"
+            android:id="@+id/forMovableSongName"
             android:layout_weight="1"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="Nothing......"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/accent_material_dark"/>
+            android:fillViewport="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/currentSong"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/songList"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/songList"
+                android:gravity="center"
+                android:maxLines="1"
+                android:scrollbars="horizontal"
+                android:text="Nothing..."
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/accent_material_dark"/>
+        </HorizontalScrollView>
+
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/imageViewSongList"
@@ -46,6 +66,18 @@
             android:background="@drawable/playlist"/>
     </LinearLayout>
 
+    <View
+        android:background="@color/black_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/playingLayout"
         android:layout_width="match_parent"
@@ -57,9 +89,14 @@
         android:orientation="vertical"
         android:visibility="visible">
 
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:layout_above="@+id/linearLayout4"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -72,23 +109,44 @@
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/previous_one"/>
+                android:background="@drawable/previous_one"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+
+            <View
+                android:background="@color/black_overlay"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
 
             <Button
                 android:id="@+id/playPause"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/pause_second"/>
+                android:background="@drawable/pause_second"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+
+            <View
+                android:background="@color/black_overlay"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
 
             <Button
                 android:id="@+id/next"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/next_one"/>
+                android:background="@drawable/next_one"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
 
         </LinearLayout>
+
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
 
         <RelativeLayout
             android:id="@+id/linearLayout4"
@@ -122,8 +180,12 @@
                 android:textColor="@color/accent_material_dark"/>
         </RelativeLayout>
 
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,7 +202,13 @@
                 android:layout_alignParentLeft="true"
                 android:background="@mipmap/repeat_off"/>
 
+            <View
+                android:background="@color/black_overlay"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
+
             <SeekBar
+                android:layout_weight="1"
                 android:id="@+id/seekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -149,6 +217,11 @@
                 android:layout_toRightOf="@+id/repeat"
                 android:indeterminate="false"/>
 
+            <View
+                android:background="@color/black_overlay"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"/>
+
             <Button
                 android:id="@+id/shuffle"
                 android:layout_width="48dp"
@@ -156,8 +229,13 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@mipmap/shuffle_off"/>
-        </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:background="@color/black_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
