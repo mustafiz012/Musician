@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/now_playing_parent_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#093458"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/now_playing_parent_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#093458"
               android:orientation="vertical"
-                tools:context="musician.kuet.musta.NowPlaying">
+              tools:context="musician.kuet.musta.NowPlaying">
 
 
     <LinearLayout
@@ -23,17 +23,17 @@
             android:background="@drawable/actionbar_back"/>
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="2dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay"/>
 
         <HorizontalScrollView
-            android:scrollbarSize="0dp"
             android:id="@+id/forMovableSongName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:fillViewport="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:scrollbarSize="0dp">
 
             <TextView
                 android:id="@+id/currentSong"
@@ -51,9 +51,9 @@
         </HorizontalScrollView>
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="2dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay"/>
 
         <Button
             android:id="@+id/imageViewSongList"
@@ -67,17 +67,18 @@
     </LinearLayout>
 
     <View
-        android:background="@color/black_overlay"
         android:layout_width="match_parent"
-        android:layout_height="2dp"/>
+        android:layout_height="2dp"
+        android:background="@color/black_overlay"/>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingRight="2dp">
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/playingLayout"
         android:layout_width="match_parent"
@@ -90,9 +91,9 @@
         android:visibility="visible">
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+            android:layout_height="2dp"
+            android:background="@color/black_overlay"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,9 +115,9 @@
                 android:paddingRight="15dp"/>
 
             <View
-                android:background="@color/black_overlay"
                 android:layout_width="2dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"/>
 
             <Button
                 android:id="@+id/playPause"
@@ -128,9 +129,9 @@
                 android:paddingRight="15dp"/>
 
             <View
-                android:background="@color/black_overlay"
                 android:layout_width="2dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"/>
 
             <Button
                 android:id="@+id/next"
@@ -144,9 +145,9 @@
         </LinearLayout>
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+            android:layout_height="2dp"
+            android:background="@color/black_overlay"/>
 
         <RelativeLayout
             android:id="@+id/linearLayout4"
@@ -181,9 +182,9 @@
         </RelativeLayout>
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+            android:layout_height="2dp"
+            android:background="@color/black_overlay"/>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -203,24 +204,24 @@
                 android:background="@mipmap/repeat_off"/>
 
             <View
-                android:background="@color/black_overlay"
                 android:layout_width="2dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"/>
 
             <SeekBar
-                android:layout_weight="1"
                 android:id="@+id/seekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/shuffle"
                 android:layout_toRightOf="@+id/repeat"
+                android:layout_weight="1"
                 android:indeterminate="false"/>
 
             <View
-                android:background="@color/black_overlay"
                 android:layout_width="2dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay"/>
 
             <Button
                 android:id="@+id/shuffle"
@@ -232,9 +233,9 @@
         </LinearLayout>
 
         <View
-            android:background="@color/black_overlay"
             android:layout_width="match_parent"
-            android:layout_height="2dp"/>
+            android:layout_height="2dp"
+            android:background="@color/black_overlay"/>
     </LinearLayout>
 
 

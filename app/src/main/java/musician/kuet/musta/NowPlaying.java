@@ -73,7 +73,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 			case R.id.action_exit:
 				this.finish();
 				break;
@@ -87,7 +87,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		Log.i("stop ", "false");
 	}
 
-	public void savePlayerStates(String key, boolean value){
+	public void savePlayerStates(String key, boolean value) {
 		SharedPreferences playerStates = PreferenceManager.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor playerStatesEditor = playerStates.edit();
 		playerStatesEditor.putBoolean(key, value);

@@ -183,7 +183,7 @@ public class Playing extends Activity implements View.OnClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 			case R.id.action_exit:
 				this.finish();
 				break;
