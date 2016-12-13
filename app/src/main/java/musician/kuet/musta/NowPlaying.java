@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -36,7 +37,8 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 	static boolean active = false, shuffleFlag = false, isRepeatOneOn = false, isRepeatOn = false, isDialogAOk = false;
 
 	SeekBar bar;
-	Button preSong, nextSong, leftSeek, rightSeek, playPause, goToSongList, shuffle, repeat, nowPlayingSongs;
+	ImageView preSong, nextSong, playPause;
+	Button shuffle, repeat, nowPlayingSongs, leftSeek, rightSeek, goToSongList;
 	static MediaPlayer player;
 	String[] songItemss;
 	ArrayList<File> songs;
@@ -56,13 +58,14 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Log.i("start ", "true");
+		Log.i("NowPlaying", "onStart");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loadPlayerStates();
+		//loadPlayerStates();
+		Log.i("NowPlaying", "onResume");
 	}
 
 	@Override
@@ -84,7 +87,10 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Log.i("stop ", "false");
+		savePlayerStates("shuffleOn", shuffleFlag);
+		savePlayerStates("repeatOn", isRepeatOn);
+		savePlayerStates("repeatOneOn", isRepeatOneOn);
+		Log.i("NowPlaying", "onStop");
 	}
 
 	public void savePlayerStates(String key, boolean value) {
@@ -92,6 +98,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		SharedPreferences.Editor playerStatesEditor = playerStates.edit();
 		playerStatesEditor.putBoolean(key, value);
 		playerStatesEditor.commit();
+		Toast.makeText(getApplicationContext(), "Player States Saved", Toast.LENGTH_SHORT).show();
 	}
 
 	public void loadPlayerStates() {
@@ -114,20 +121,18 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 			isRepeatOneOn = true;
 			isRepeatOn = false;
 			repeat.setBackgroundResource(R.mipmap.repeat_one);
-		} else {
+		} else if (!repeatOn && !repeatOneOn) {
 			isRepeatOn = false;
 			isRepeatOneOn = false;
 			repeat.setBackgroundResource(R.mipmap.repeat_off);
 		}
+		Toast.makeText(getApplicationContext(), "Player States restored", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.i("NowPlaying ", "onPause called");
-		savePlayerStates("shuffleOn", shuffleFlag);
-		savePlayerStates("repeatOn", isRepeatOn);
-		savePlayerStates("repeatOneOn", isRepeatOneOn);
+		Log.i("NowPlaying ", "onPause");
 		openActivityNotification(getApplicationContext());
 		active = true;
 	}
@@ -137,21 +142,28 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		super.onDestroy();
 		player.reset();
 		player.release();
+		Log.i("NowPlaying ", "onDestroy");
 	}
 
 
 	@Override
 	public void onBackPressed() {
 		goToHome();
+		Log.i("NowPlaying ", "onBackPressed");
 	}
 
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Log.i("NowPlaying ", "onRestart");
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_now_playing);
-
-		//all objects declaration here
+		Log.i("NowPlaying ", "onCreate");
+		//all objects declared here
 		initialization();
 
 		loadPlayerStates();
@@ -181,9 +193,13 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 		//creating a fresh mediaPlayer
 		if (player != null) {
-			player.stop();
-			player.reset();
-			player.release();
+			try {
+				player.stop();
+				player.reset();
+				player.release();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			}
 		}
 		//getting the songs as ArrayList from the array Playing sent here
 		Intent intent = getIntent();
@@ -193,7 +209,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		position = gBundle.getInt("pos", 0);
 		uri = Uri.parse(songs.get(position).toString());
 		player = MediaPlayer.create(getApplicationContext(), uri);
-		Log.i("position ", "" + position);
+		//Log.i("position ", "" + position);
 		player.start();
 		updateSongInfo(position);
 		seekBarUpdating.start();
@@ -244,14 +260,14 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 
 	public void updateSongInfo(int thisOne) {
-		playPause.setBackgroundResource(R.drawable.pause_second);
+		playPause.setImageResource(R.drawable.btn_pause);
 		finalTime = player.getDuration();
 		bar.setMax((int) finalTime);
 		//bar.setProgress(0);
 		currentSong.setText("" + songs.get(thisOne).getName().replace(".mp3", "").replace(".MP3", "").replace(".wav", "").replace(".WAV", "").replace("_", " "));
 		//setting player button
 		if (!player.isPlaying()) {
-			playPause.setBackgroundResource(R.drawable.play_one);
+			playPause.setImageResource(R.drawable.btn_play);
 		}
 		rightDuration.setText(String.format("%d:%d",
 				TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
@@ -291,11 +307,11 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 
 	public void initialization() {
 		bar = (SeekBar) findViewById(R.id.seekBar);
-		preSong = (Button) findViewById(R.id.previous);
-		nextSong = (Button) findViewById(R.id.next);
+		preSong = (ImageView) findViewById(R.id.previous);
+		nextSong = (ImageView) findViewById(R.id.next);
 //		leftSeek = (Button) findViewById(R.id.leftSeeking);
 //		rightSeek = (Button) findViewById(R.id.rightSeeking);
-		playPause = (Button) findViewById(R.id.playPause);
+		playPause = (ImageView) findViewById(R.id.playPause);
 		currentSong = (TextView) findViewById(R.id.currentSong);
 		leftDuration = (TextView) findViewById(R.id.leftDuration);
 		rightDuration = (TextView) findViewById(R.id.rightDuration);
@@ -325,9 +341,9 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 				try {
 					if (player.isPlaying()) {
 						player.pause();
-						playPause.setBackgroundResource(R.drawable.play_one);
+						playPause.setImageResource(R.drawable.btn_play);
 					} else {
-						Log.i("position ", "" + position);
+						//Log.i("position ", "" + position);
 						player.start();
 						updateSongInfo(position);
 					}
@@ -354,10 +370,10 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					Log.i("position ", "" + position);
+					//Log.i("position ", "" + position);
 					player.start();
 					updateSongInfo(position);
-					playPause.setBackgroundResource(R.drawable.pause_second);
+					playPause.setImageResource(R.drawable.btn_pause);
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalStateException e) {
@@ -369,7 +385,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 				try {
 					player.stop();
 					player.reset();
-					Log.i("Previous ", "" + position);
+					//Log.i("Previous ", "" + position);
 					if (position - 1 < 0) {
 						if (shuffleFlag) {
 							position = randomPosition.nextInt((songs.size() - 0) + 0);
@@ -382,7 +398,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 						else
 							position--;
 					}
-					Log.i("Previous ", "" + position);
+					//Log.i("Previous ", "" + position);
 					uri = Uri.parse(songs.get(position).toString());
 					try {
 						player.setDataSource(getApplicationContext(), uri);
@@ -390,8 +406,8 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					playPause.setBackgroundResource(R.drawable.pause_second);
-					Log.i("position ", "" + position);
+					playPause.setImageResource(R.drawable.btn_pause);
+					//Log.i("position ", "" + position);
 					player.start();
 					updateSongInfo(position);
 				} catch (IllegalArgumentException e) {
@@ -458,7 +474,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 				songItemss = new String[songs.size()];
 				for (int i = 0; i < songs.size(); i++) {
 					//customToast(songs.get(i).getName().toString());
-					songItemss[i] = songs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
+					songItemss[i] = songs.get(i).getName().replace(".mp3", "").replace(".wav", "");
 				}
 				adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.song_layout, R.id.songListText, songItemss);
 				dialog.setContentView(R.layout.songs_dialog);
@@ -472,7 +488,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 //                        isDialogAOk = true;
 						player.stop();
 						player.reset();
-						Log.i("position bf ", "" + position);
+						//Log.i("position bf ", "" + position);
 						uri = Uri.parse(songs.get(position).toString());
 						try {
 							player.setDataSource(getApplicationContext(), uri);
@@ -480,7 +496,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						Log.i("position ", "" + position);
+						//Log.i("position ", "" + position);
 						player.start();
 //                        updateSongInfoFromDialog(position);
 						updateSongInfoFromDialog(position);
@@ -504,13 +520,13 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 			openActivityNotification(getApplicationContext());
 		}
 		int currentSongPosition = position;
-		Log.i("onCompletion: ", "calling");
+		Log.i("NowPlaying", "onCompletion");
 		//Playing next song automatically
 		mp.stop();
 		mp.reset();
 		//if (isDialogAOk == true)
 		updateSongInfoFromDialog(position);
-		Log.i("dialog index:", "" + position);
+		//Log.i("dialog index:", "" + position);
 
 		if (shuffleFlag && !isRepeatOneOn) {
 			position = randomPosition.nextInt((songs.size() - 0) + 0);
@@ -525,7 +541,7 @@ public class NowPlaying extends Activity implements View.OnClickListener, MediaP
 		try {
 			mp.setDataSource(getApplicationContext(), uri);
 			mp.prepare();
-			Log.i("position ", "" + position);
+			//Log.i("position ", "" + position);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

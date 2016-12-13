@@ -1,12 +1,16 @@
 package musician.kuet.musta;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +29,7 @@ public class Playing extends Activity implements View.OnClickListener {
 	String[] songItems;
 	String testItems;
 	ListView songList;
-	File internal, external, externalStorageRoot, temp;
+	File internal, external, externalStorageRoot;
 	File[] filess;
 	int counter = 0;
 	Button playingSong;
@@ -40,14 +44,14 @@ public class Playing extends Activity implements View.OnClickListener {
 		TextView songsSize = (TextView) findViewById(R.id.songsSize);
 		playingSong.setOnClickListener(this);
 		songList = (ListView) findViewById(R.id.lvSongList);
-
+		registerForContextMenu(songList);
 		final String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {  // we can read the External Storage...
 			//Retrieve the primary External Storage:
 			final File primaryExternalStorage = Environment.getExternalStorageDirectory();
 
-			//Retrieve the External Storages root directory:
+			//Retrieve the External Storage root directories:
 			final String externalStorageRootDir;
 			if ((externalStorageRootDir = primaryExternalStorage.getParent()) == null) {  // no parent...
 				Log.d(TAG, "External Storage: " + primaryExternalStorage + "\n");
@@ -79,7 +83,7 @@ public class Playing extends Activity implements View.OnClickListener {
 			final ArrayList<File> songs = updateSongList(internal);
 
 			if (testItems != null) {
-				Log.i("Bluestacks ", "Working");
+				//Log.i("Bluestacks ", "Working");
 				//collecting audio songs from external storage
 				final ArrayList<File> song2 = updateSongList(external);
 				//all songs getting together
@@ -93,7 +97,7 @@ public class Playing extends Activity implements View.OnClickListener {
 				songItems[i] = songs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
 			}
 			//listing out the songList in Playing activity
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.song_layout, R.id.songListText, songItems);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.playlist_item, R.id.songTitle, songItems);
 			songList.setAdapter(adapter);
 			//playing specific song by clicking on the the song item
 			songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,17 +106,40 @@ public class Playing extends Activity implements View.OnClickListener {
 					startActivity(new Intent(getApplicationContext(), NowPlaying.class).putExtra("pos", position).putExtra("songs", songs));
 				}
 			});
-			//trying to check out the option of the song item by pressing and holding on each
+			/*//trying to check out the option of the song item by pressing and holding on each
 			songList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					customToast("something need to add");
+					customToast(""+songs.get(position).getName().toString().replace(".mp3", ""));
+
 					return false;
 				}
-			});
+			});*/
 		}
 
 
+	}
+
+	public void addDialog() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+		//builder.setTitle(""+songs.get(position).getName().toString().replace(".mp3", ""));
+		builder.setItems(R.array.song_properties, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (which == 4)
+					customToast("Deletion will be implemented soon :P");
+				else if (which == 3)
+					customToast("Quick list will be implemented soon :P");
+				else if (which == 2)
+					customToast("Playlist will be implemented soon :P");
+				else if (which == 1)
+					customToast("SET AS functionality will be implemented soon :P");
+				else if (which == 0)
+					customToast("Sharing functionality will be implemented soon :P");
+			}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	boolean doubleBackToExitPressedOnce = false;
@@ -138,13 +165,13 @@ public class Playing extends Activity implements View.OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.i("playing", "onResumed");
+		Log.i("Playing", "onResumed");
 	}
 
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.i("playing", "onRestart");
+		Log.i("Playing", "onRestart");
 	}
 
 	public void customToast(String text) {
@@ -171,7 +198,7 @@ public class Playing extends Activity implements View.OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.i("onPause:", "Playing");
+		Log.i("Playing:", "onPause");
 		//finish();
 	}
 
@@ -179,6 +206,40 @@ public class Playing extends Activity implements View.OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_playing, menu);
 		return true;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		if (v.getId() == R.id.lvSongList) {
+			getMenuInflater().inflate(R.menu.menu_song_properties, menu);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {
+			case R.id.share:
+				customToast("Sharing functionality will be implemented soon :P");
+				return true;
+			case R.id.set_as:
+				customToast("SET AS functionality will be implemented soon :P");
+				return true;
+			case R.id.add_to_playlist:
+				customToast("Playlist will be implemented soon :P");
+				return true;
+			case R.id.add_quick_list:
+				customToast("Quick list will be implemented soon :P");
+				return true;
+			case R.id.deletion: {
+
+				customToast("Deletion will be implemented soon :P");
+			}
+			return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
 	}
 
 	@Override
@@ -194,7 +255,7 @@ public class Playing extends Activity implements View.OnClickListener {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Log.i("Playing ", "stop called");
+		Log.i("Playing ", "onStop");
 	}
 
 	@Override
@@ -208,7 +269,7 @@ public class Playing extends Activity implements View.OnClickListener {
 				Log.i("NowPlaying ", "active is true");
 				startActivity(intent);
 			} else {
-				Log.i("now ", "false");
+				//Log.i("Playing ", "false");
 				try {
 					Toast.makeText(Playing.this, "Nothing is playing....", Toast.LENGTH_LONG).show();
 				} catch (IndexOutOfBoundsException e) {
