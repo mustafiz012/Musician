@@ -2,4 +2,6 @@
     <color name="black_overlay">#66000000</color>
     <color name="ColorPrimary">#FF5722</color>
     <color name="ColorPrimaryDark">#E64A19</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Playing extends Activity implements View.OnClickListener {
 
@@ -33,7 +35,10 @@ public class Playing extends Activity implements View.OnClickListener {
 	File[] filess;
 	int counter = 0;
 	Button playingSong;
+	FloatingActionButton floatingActionButton;
 	NowPlaying status = new NowPlaying();
+	ArrayList<File> songs, songs2;
+	Random randomPosition = new Random();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class Playing extends Activity implements View.OnClickListener {
 		setContentView(R.layout.activity_playing);
 		ArrayList<File> root = new ArrayList<File>();
 		playingSong = (Button) findViewById(R.id.playingSong);
+		floatingActionButton = (FloatingActionButton) findViewById(R.id.shuffle_all_songs);
+		floatingActionButton.setOnClickListener(this);
 		TextView songsSize = (TextView) findViewById(R.id.songsSize);
 		playingSong.setOnClickListener(this);
 		songList = (ListView) findViewById(R.id.lvSongList);
@@ -80,14 +87,14 @@ public class Playing extends Activity implements View.OnClickListener {
 			//external storage directory
 			external = new File(testItems);
 			//collecting audio songs from internal storage
-			final ArrayList<File> songs = updateSongList(internal);
+			songs = updateSongList(internal);
 
 			if (testItems != null) {
 				//Log.i("Bluestacks ", "Working");
 				//collecting audio songs from external storage
-				final ArrayList<File> song2 = updateSongList(external);
+				songs2 = updateSongList(external);
 				//all songs getting together
-				songs.addAll(song2);
+				songs.addAll(songs2);
 			}
 
 			songsSize.setText(songs.size() + " songs");
@@ -118,28 +125,6 @@ public class Playing extends Activity implements View.OnClickListener {
 		}
 
 
-	}
-
-	public void addDialog() {
-		final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-		//builder.setTitle(""+songs.get(position).getName().toString().replace(".mp3", ""));
-		builder.setItems(R.array.song_properties, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (which == 4)
-					customToast("Deletion will be implemented soon :P");
-				else if (which == 3)
-					customToast("Quick list will be implemented soon :P");
-				else if (which == 2)
-					customToast("Playlist will be implemented soon :P");
-				else if (which == 1)
-					customToast("SET AS functionality will be implemented soon :P");
-				else if (which == 0)
-					customToast("Sharing functionality will be implemented soon :P");
-			}
-		});
-		AlertDialog dialog = builder.create();
-		dialog.show();
 	}
 
 	boolean doubleBackToExitPressedOnce = false;
@@ -275,6 +260,16 @@ public class Playing extends Activity implements View.OnClickListener {
 				} catch (IndexOutOfBoundsException e) {
 					e.printStackTrace();
 				}
+			}
+		}else if (v == floatingActionButton){
+			int randIndex = randomPosition.nextInt((songs.size() - 0) + 0);
+			Log.i("randIndex", ""+randIndex);
+			try{
+				startActivity(new Intent(getApplicationContext(), NowPlaying.class).putExtra("pos", randIndex).putExtra("songs", songs));
+			}catch (NullPointerException e){
+				e.printStackTrace();
+			}finally {
+				startActivity(new Intent(getApplicationContext(), NowPlaying.class).putExtra("pos", 0).putExtra("songs", songs));
 			}
 		}
 	}
