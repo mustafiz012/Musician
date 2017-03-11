@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="musician.kuet.musta.Playing">
-<!--
-http://stackoverflow.com/questions/40578157/ripple-effect-for-pre-lollipop
-http://rey5137.com/material/
--->
+
     <LinearLayout
         android:id="@+id/parentLayout"
         android:layout_width="match_parent"
@@ -35,15 +32,16 @@ http://rey5137.com/material/
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <com.rey.material.widget.Button
+                style="@style/ButtonRippleStyle"
+                app:rd_enable="true"
                 android:id="@+id/playingSong"
-                style="@style/ButtonRippleStyleSeaGreen"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/actionbar_forward"
-                app:rd_enable="true" />
+                 />
         </LinearLayout>
 
         <ListView
@@ -58,20 +56,20 @@ http://rey5137.com/material/
             android:scrollbarFadeDuration="300"
             android:scrollbarSize="10dp"
             android:scrollbarStyle="outsideOverlay" />
-    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/shuffle_all_songs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end"
-        android:clickable="true"
-        android:elevation="4dp"
-        android:src="@mipmap/shuffle"
-        app:fabSize="normal"
-        app:rippleColor="@color/white" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/shuffle_all_songs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:elevation="4dp"
+            android:src="@mipmap/shuffle"
+            app:fabSize="normal"
+            app:rippleColor="@color/white" />
+    </LinearLayout>
 
     <include
         android:id="@+id/now_playing_layout"

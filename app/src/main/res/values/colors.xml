@@ -4,4 +4,624 @@
     <color name="ColorPrimaryDark">#E64A19</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="blue">#0000ff</color>
+    <color name="color_primary">#fafafa</color>
+    <color name="primary_dark">#e09721</color>
+    <color name="font_color_action_bar_title">#E6252525</color>
+
+    <!--from samu-->
+
+    <!-- opacity reference -->
+    <color name="color_000000_op100">#ff000000</color>
+    <color name="color_000000_op99">#fc000000</color>
+    <color name="color_000000_op98">#fa000000</color>
+    <color name="color_000000_op97">#f7000000</color>
+    <color name="color_000000_op96">#f5000000</color>
+    <color name="color_000000_op95">#f2000000</color>
+    <color name="color_000000_op94">#f0000000</color>
+    <color name="color_000000_op93">#ed000000</color>
+    <color name="color_000000_op92">#eb000000</color>
+    <color name="color_000000_op91">#e8000000</color>
+    <color name="color_000000_op90">#e6000000</color>
+    <color name="color_000000_op89">#e3000000</color>
+    <color name="color_000000_op88">#e0000000</color>
+    <color name="color_000000_op87">#de000000</color>
+    <color name="color_000000_op86">#db000000</color>
+    <color name="color_000000_op85">#d9000000</color>
+    <color name="color_000000_op84">#d6000000</color>
+    <color name="color_000000_op83">#d4000000</color>
+    <color name="color_000000_op82">#d1000000</color>
+    <color name="color_000000_op81">#cf000000</color>
+    <color name="color_000000_op80">#cc000000</color>
+    <color name="color_000000_op79">#c9000000</color>
+    <color name="color_000000_op78">#c7000000</color>
+    <color name="color_000000_op77">#c4000000</color>
+    <color name="color_000000_op76">#c2000000</color>
+    <color name="color_000000_op75">#bf000000</color>
+    <color name="color_000000_op74">#bd000000</color>
+    <color name="color_000000_op73">#ba000000</color>
+    <color name="color_000000_op72">#b8000000</color>
+    <color name="color_000000_op71">#b5000000</color>
+    <color name="color_000000_op70">#b3000000</color>
+    <color name="color_000000_op69">#b0000000</color>
+    <color name="color_000000_op68">#ad000000</color>
+    <color name="color_000000_op67">#ab000000</color>
+    <color name="color_000000_op66">#a8000000</color>
+    <color name="color_000000_op65">#a6000000</color>
+    <color name="color_000000_op64">#a3000000</color>
+    <color name="color_000000_op63">#a1000000</color>
+    <color name="color_000000_op62">#9e000000</color>
+    <color name="color_000000_op61">#9c000000</color>
+    <color name="color_000000_op60">#99000000</color>
+    <color name="color_000000_op59">#96000000</color>
+    <color name="color_000000_op58">#94000000</color>
+    <color name="color_000000_op57">#91000000</color>
+    <color name="color_000000_op56">#8f000000</color>
+    <color name="color_000000_op55">#8c000000</color>
+    <color name="color_000000_op54">#8a000000</color>
+    <color name="color_000000_op53">#87000000</color>
+    <color name="color_000000_op52">#85000000</color>
+    <color name="color_000000_op51">#82000000</color>
+    <color name="color_000000_op50">#80000000</color>
+    <color name="color_000000_op49">#7d000000</color>
+    <color name="color_000000_op48">#7a000000</color>
+    <color name="color_000000_op47">#78000000</color>
+    <color name="color_000000_op46">#75000000</color>
+    <color name="color_000000_op45">#73000000</color>
+    <color name="color_000000_op44">#70000000</color>
+    <color name="color_000000_op43">#6e000000</color>
+    <color name="color_000000_op42">#6b000000</color>
+    <color name="color_000000_op41">#69000000</color>
+    <color name="color_000000_op40">#66000000</color>
+    <color name="color_000000_op39">#63000000</color>
+    <color name="color_000000_op38">#61000000</color>
+    <color name="color_000000_op37">#5e000000</color>
+    <color name="color_000000_op36">#5c000000</color>
+    <color name="color_000000_op35">#59000000</color>
+    <color name="color_000000_op34">#57000000</color>
+    <color name="color_000000_op33">#54000000</color>
+    <color name="color_000000_op32">#52000000</color>
+    <color name="color_000000_op31">#4f000000</color>
+    <color name="color_000000_op30">#4d000000</color>
+    <color name="color_000000_op29">#4a000000</color>
+    <color name="color_000000_op28">#47000000</color>
+    <color name="color_000000_op27">#45000000</color>
+    <color name="color_000000_op26">#42000000</color>
+    <color name="color_000000_op25">#40000000</color>
+    <color name="color_000000_op24">#3d000000</color>
+    <color name="color_000000_op23">#3b000000</color>
+    <color name="color_000000_op22">#38000000</color>
+    <color name="color_000000_op21">#36000000</color>
+    <color name="color_000000_op20">#33000000</color>
+    <color name="color_000000_op19">#30000000</color>
+    <color name="color_000000_op18">#2e000000</color>
+    <color name="color_000000_op17">#2b000000</color>
+    <color name="color_000000_op16">#29000000</color>
+    <color name="color_000000_op15">#26000000</color>
+    <color name="color_000000_op14">#24000000</color>
+    <color name="color_000000_op13">#21000000</color>
+    <color name="color_000000_op12">#1f000000</color>
+    <color name="color_000000_op11">#1c000000</color>
+    <color name="color_000000_op10">#1a000000</color>
+    <color name="color_000000_op9">#17000000</color>
+    <color name="color_000000_op8">#14000000</color>
+    <color name="color_000000_op7">#12000000</color>
+    <color name="color_000000_op6">#0f000000</color>
+    <color name="color_000000_op5">#0d000000</color>
+    <color name="color_000000_op4">#0a000000</color>
+    <color name="color_000000_op3">#08000000</color>
+    <color name="color_000000_op2">#05000000</color>
+    <color name="color_000000_op1">#03000000</color>
+    <color name="color_000000_op0">#00000000</color>
+
+    <color name="color_252525_op17">#2b252525</color>
+    <color name="color_252525_op28">#47252525</color>
+    <color name="color_252525_op30">#4d252525</color>
+    <color name="color_252525_op37">#5e252525</color>
+    <color name="color_252525_op40">#66252525</color>
+    <color name="color_252525_op47">#78252525</color>
+    <color name="color_252525_op50">#80252525</color>
+    <color name="color_252525_op55">#8c252525</color>
+    <color name="color_252525_op60">#99252525</color>
+    <color name="color_252525_op74">#bd252525</color>
+    <color name="color_252525_op85">#d9252525</color>
+    <color name="color_252525_op90">#e6252525</color>
+    <color name="color_313131_op25">#40313131</color>
+    <color name="color_323232_op35">#59323232</color>
+    <color name="color_767676_op80">#cc767676</color>
+    <color name="color_979797_op37">#5e979797</color>
+    <color name="color_e09721_op40">#66e09721</color>
+    <color name="color_e09721_op90">#e6e09721</color>
+    <color name="color_f7a92b_op75">#bff7a92b</color>
+    <color name="color_f9a825_op37">#5ef9a825</color>
+    <color name="color_f9a825_op40">#66f9a825</color>
+    <color name="color_f2f2f2_op50">#80f2f2f2</color>
+    <color name="color_fafafa_op20">#33fafafa</color>
+    <color name="color_fafafa_op50">#80fafafa</color>
+    <color name="color_fafafa_op75">#bffafafa</color>
+    <color name="color_fafafa_op80">#ccfafafa</color>
+    <color name="color_fafafa_op85">#d9fafafa</color>
+    <color name="color_ffb335_op40">#66ffb335</color>
+    <color name="color_ffb335_op20">#33ffb335</color>
+    <color name="color_ffffff_op16">#29ffffff</color>
+    <color name="color_ffffff_op28">#47ffffff</color>
+    <color name="color_ffffff_op45">#73ffffff</color>
+
+    <!-- Gear 360 manager -->
+    <color name="primary">#f9a825</color>
+    <color name="primary_op40">@color/color_f9a825_op40</color>
+    <color name="primary_dark_op40">@color/color_e09721_op40</color>
+    <color name="primary_dark_op90">@color/color_e09721_op90</color>
+    <color name="control_activated">#ffb335</color>
+    <color name="control_activated_op40">@color/color_ffb335_op40</color>
+
+    <color name="checkbox_on">@color/control_activated</color>
+    <color name="checkbox_on_dim">@color/control_activated_op40</color>
+    <color name="checkbox_off">#737373</color>
+    <color name="checkbox_off_dim">@color/control_activated_op40</color>
+
+    <!-- basic interaction guide -->
+    <color name="basic_background">#fafafa</color>
+
+    <color name="basic_ripple">@color/color_000000_op16</color>
+    <color name="basic_ripple_list">@color/color_000000_op12</color>
+    <color name="basic_ripple_spinner_sub_app_bar">@color/color_000000_op12</color>
+    <color name="basic_ripple_master_switch">@color/color_000000_op12</color>
+
+    <color name="basic_action_bar_title_text">@color/color_252525_op90</color>
+    <color name="basic_action_bar_divider">@color/color_000000_op7</color>
+    <color name="basic_action_bar_background">@color/basic_background</color>
+
+    <color name="basic_navigate_up_button">@color/primary_dark</color>
+
+    <color name="basic_edit_app_bar_text">@color/primary_dark</color>
+    <color name="basic_edit_app_bar_text_dim">@color/primary_dark_op40</color>
+    <color name="basic_edit_app_bar_divider">#d4d4d4</color>
+    <color name="basic_edit_app_bar_background">#f0f0f0</color>
+
+    <color name="basic_flat_button_previous_next_background">@color/basic_background</color>
+    <color name="basic_flat_button_previous_next_divider">@color/color_000000_op7</color>
+    <color name="basic_flat_button_previous_next_text">@color/color_252525_op85</color>
+    <color name="basic_flat_button_previous_next_text_dim">@color/color_252525_op28</color>
+    <color name="basic_flat_button_previous_next_icon">#D9252525</color>
+    <color name="basic_flat_button_previous_next_icon_dim">#47252525</color>
+    <color name="basic_flat_button_previous_next_button_shape">@color/color_ffffff_op28</color>
+    <color name="basic_flat_button_previous_next_button_shape_stroke">@color/color_000000_op30
+    </color>
+
+    <color name="basic_raised_button_text">#252525</color>
+    <color name="basic_raised_button_text_dim">@color/color_252525_op28</color>
+
+    <color name="basic_about_page_app_name_text">#252525</color>
+    <color name="basic_about_page_version_name_text">@color/color_252525_op60</color>
+    <color name="basic_about_page_version_description_text">@color/color_252525_op60</color>
+    <color name="basic_about_page_links_text">@color/color_252525_op90</color>
+    <color name="basic_about_page_update_button_text">#fafafa</color>
+    <color name="basic_about_page_update_button_background">@color/primary</color>
+
+    <color name="basic_list_background">#fafafa</color>
+    <color name="basic_list_text">#252525</color>
+    <color name="basic_list_text_dim">@color/color_252525_op37</color>
+    <color name="basic_list_secondary_text">#979797</color>
+    <color name="basic_list_secondary_text_dim">@color/color_979797_op37</color>
+    <color name="basic_list_subheader_text">@color/color_252525_op47</color>
+    <color name="basic_list_subheader_text_dim">@color/color_252525_op17</color>
+    <color name="basic_list_divider">#e6e6e6</color>
+
+    <color name="basic_chooser_activity_app_text">#252525</color>
+
+    <color name="basic_description_text">#505050</color>
+    <color name="basic_description_divider">@color/basic_list_divider</color>
+
+    <color name="basic_spinner_text">@color/color_252525_op85</color>
+
+    <color name="basic_dropdown_text_normal">#252525</color>
+    <color name="basic_dropdown_text_dim">@color/color_252525_op37</color>
+    <color name="basic_dropdown_text_selected">@color/primary_dark</color>
+
+    <color name="basic_navigation_bar_background_color_white_theme_opaque">#f5f5f5</color>
+    <color name="basic_navigation_bar_background_color_black_theme_opaque">#000000</color>
+    <color name="basic_navigation_bar_background_color_default">
+        @color/basic_navigation_bar_background_color_white_theme_opaque
+    </color>
+
+    <!-- Indicator & Quickpanel -->
+    <color name="indicator_battery_text">#252525</color>
+
+    <!-- Studio -->
+    <color name="studio_bottom_bar_text">@color/color_252525_op85</color>
+    <color name="studio_bottom_bar_text_stroke">#f2f2f2</color>
+    <color name="studio_bottom_bar_background">@color/color_fafafa_op85</color>
+    <color name="studio_top_bar_text">@color/color_252525_op85</color>
+    <color name="studio_top_bar_text_stroke">#f2f2f2</color>
+    <color name="studio_top_bar_background">@android:color/transparent</color>
+    <color name="studio_top_bar_back_button_icon">#5a6167</color>
+    <color name="studio_top_bar_back_button_icon_stroke">@color/color_f2f2f2_op50</color>
+
+    <!-- Gear 360 manager -->
+    <color name="action_button_text">@color/primary_dark</color>
+
+    <!-- Home page -->
+    <color name="home_page_text_connect">@color/primary_dark</color>
+    <color name="home_page_list_top_divider">@color/color_000000_op7</color>
+    <color name="home_page_live_broadcast_app_text">#252525</color>
+
+    <color name="home_page_top_panel_connect_text">@color/primary_dark</color>
+    <color name="home_page_top_panel_spinner">#646464</color>
+
+    <!-- Home page : battery indicator-->
+    <color name="battery_indicator_battery_percentage_text">@color/color_252525_op74</color>
+    <color name="battery_indicator_battery_status_text_low_battery">#f4511e</color>
+    <color name="battery_indicator_battery_status_text_unknown">#f4f4f4</color>
+    <color name="battery_indicator_battery_status_icon">#f4f4f4</color>
+    <color name="battery_indicator_battery_fill_area_low_battery">#f4511e</color>
+    <color name="battery_indicator_battery_fill_area">#252525</color>
+    <color name="battery_indicator_battery_empty_area">@color/color_252525_op40</color>
+
+    <!-- Home page : connection dots-->
+    <color name="connection_dots_dot_connected">@color/primary</color>
+    <color name="connection_dots_dot_disconnected">#d9d9d9</color>
+
+    <!-- detail view (image player uses same look) -->
+    <color name="detail_view_top_panel_background">@color/color_fafafa_op75</color>
+    <color name="detail_view_top_panel_text">@color/color_252525_op85</color>
+    <color name="detail_view_top_panel_icon">@color/color_252525_op85</color>
+    <color name="detail_view_bottom_panel_background">@color/color_fafafa_op75</color>
+    <color name="detail_view_top_bottom_panel_divider">@color/color_000000_op7</color>
+    <color name="detail_view_tab_on_background">#fafafa</color>
+    <color name="detail_view_tab_off_background">#000000</color>
+
+    <!-- video editor trim picker -->
+    <color name="video_editor_trim_picker_bar">#ed920f</color>
+    <color name="video_editor_trim_picker_bar_background">@color/color_fafafa_op50</color>
+
+    <!-- reset view button (common) -->
+    <color name="reset_view_text">#fafafa</color>
+    <color name="reset_view_ripple">@color/color_fafafa_op20</color>
+    <color name="reset_view_text_stroke">@color/black</color>
+
+    <!-- video player -->
+    <color name="video_player_volume_text">#fafafa</color>
+    <color name="video_player_volume_text_stroke">@color/black</color>
+    <color name="video_player_play_pause_ripple">@color/color_000000_op16</color>
+    <color name="video_player_rewind_fast_forward_ripple">@color/color_ffffff_op16</color>
+    <color name="video_player_icon_ripple">@color/color_ffffff_op45</color>
+
+    <!-- video player (playback speed) -->
+    <color name="video_player_playback_speed_panel_title">#ffffff</color>
+    <color name="video_player_playback_speed_panel_title_stroke">@color/black</color>
+    <color name="video_player_playback_speed_panel_seek_bar_bar">#fafafa</color>
+    <color name="video_player_playback_speed_panel_seek_bar_bar_stroke">@color/color_000000_op35
+    </color>
+
+    <!-- video player (playback speed : value popup) -->
+    <color name="video_player_playback_speed_value_popup_text">#252525</color>
+    <color name="video_player_playback_speed_value_popup_background">@color/color_fafafa_op80
+    </color>
+    <color name="video_player_playback_speed_value_popup_background_stroke">
+        @color/color_000000_op30
+    </color>
+
+    <!-- video player (frame capture) -->
+    <color name="video_player_frame_capture_background">@color/color_000000_op20</color>
+
+    <!-- setting : storage -->
+    <color name="setting_storage_available_text">@color/color_252525_op90</color>
+    <color name="setting_storage_available_value">#f3a425</color>
+    <color name="setting_storage_available_unit">#f3a425</color>
+    <color name="settings_storage_used_text_value_unit">@color/color_f7a92b_op75</color>
+    <color name="settings_storage_total_text_value_unit">@color/color_252525_op55</color>
+    <color name="setting_storage_list_text">#252525</color>
+    <color name="setting_storage_list_value">#505050</color>
+    <color name="setting_storage_list_unit">#505050</color>
+
+    <!-- notification -->
+    <color name="notification_panel_app_icon_text">#b16000</color>
+
+
+    <!-- ************************************************  -->
+
+    <color name="text_normal">@color/color_app_333333</color>
+    <color name="text_dim">@color/color_app_999999</color>
+    <color name="text_dim_d9d9d9">@color/color_app_999999</color>
+    <color name="text_highlight">#FF40AFFF</color>
+    <color name="text_normal_popup_dark">@color/color_app_f5f5f5</color>
+    <color name="text_dim_popup_dark">#66f5f5f5</color>
+
+    <!-- SRBD Colors -->
+
+    <color name="color_app_001c27">#001c27</color>
+    <color name="color_app_tw_actionbar_back_color_selected">@color/color_app_001c27</color>
+    <color name="color_app_005d6f">#005d6f</color>
+    <color name="color_app_tw_actionbar_back_color">@color/color_app_005d6f</color>
+    <color name="help_dialog_back_color">#59000000</color>
+    <color name="color_app_manager_background_bg">@color/color_app_f5f5f5</color>
+
+    <!-- This color is used in lieu of manager_list_divide.9.png -->
+    <color name="color_app_manager_list_divide">@color/color_app_bfb0a1</color>
+    <color name="color_app_bfb0a1">#bfb0a1</color>
+    <!--  -->
+
+
+    <!-- This color is used in lieu of manager_list_divider.9.png -->
+    <color name="color_app_manager_list_divider">@color/color_app_d1cac2</color>
+    <color name="color_app_d1cac2">#d1cac2</color>
+    <!--  -->
+
+
+    <color name="color_app_connection_list_divider">@color/color_app_d9d9d9</color>
+    <color name="color_app_d9d9d9">#d9d9d9</color>
+
+
+    <!-- This color is used in lieu of manager_list_pressed.9 -->
+    <color name="color_app_f5d1a2">#F5D1A2</color>
+    <color name="color_app_manager_list_pressed">@color/color_app_f5d1a2</color>
+    <!--  -->
+
+    <color name="color_app_333333">#333333</color>
+    <color name="color_app_3e79b1">#3e79b1</color>
+    <color name="color_app_999999">#999999</color>
+    <color name="color_app_ff9000">#ff9000</color>
+    <color name="color_app_8a8a8a">#8a8a8a</color>
+    <color name="color_app_8f5d00">#8f5d00</color>
+    <color name="color_app_675236">#675236</color>
+    <color name="color_app_8a643d">#8a643d</color>
+    <color name="color_app_000000">#000000</color>
+    <color name="color_app_8d9ca3">#8d9ca3</color>
+    <color name="color_app_007990">#007990</color>
+    <color name="color_app_43add4">#43add4</color>
+    <color name="color_app_00151c">#00151c</color>
+    <color name="color_app_f5f5f5">#f5f5f5</color>
+    <color name="color_app_f5f5f5_40">#66f5f5f5</color>
+    <color name="color_app_f5f5f5_75">#C0F5F5F5</color>
+    <color name="color_app_e6e6e6">#e6e6e6</color>
+    <color name="color_app_e6e6e6_40">#66e6e6e6</color>
+    <color name="color_app_4b4b4b">#4b4b4b</color>
+    <color name="color_app_fdfdfd">#fdfdfd</color>
+    <color name="color_app_ffffff">#ffffff</color>
+    <color name="color_app_dc2828">#dc2828</color>
+    <color name="color_app_dde5e8">#dde5e8</color>
+    <color name="color_app_0191ac">#0191ac</color>
+    <color name="color_app_848484">#848484</color>
+    <color name="color_app_2cdaff">#2cdaff</color>
+    <color name="color_app_e7e7e7">#e7e7e7</color>
+    <color name="color_app_000000_75">#c0000000</color>
+    <color name="color_app_000000_40">#66000000</color>
+    <color name="color_app_000000_28">#48000000</color>
+    <color name="color_app_363636">#363636</color>
+    <color name="color_app_b3fafafa">#B3fafafa</color>
+    <color name="color_app_b3ffffff">#B3ffffff</color>
+    <color name="color_app_252525">#252525</color>
+    <color name="color_app_252525_90">#E5252525</color>
+    <color name="color_app_252525_28">#47252525</color>
+    <color name="color_app_0070d2">#0070d2</color>
+    <!-- SRBD Colors End -->
+    <!-- utpal.nath for WQXGA -->
+    <color name="color_app_child">@color/color_app_child_333333</color>
+    <color name="color_app_child_333333">#333333</color>
+
+    <!-- RVF -->
+
+    <color name="rvf_smart_panel_text">#f5f5f5</color>
+    <color name="rvf_smart_panel_text_dim">#1Af5f5f5</color>
+    <color name="rvf_smart_panel_menu_dim">#A4A4A4</color>
+
+    <color name="lvb_setting_menu_dim">#86898b</color>
+
+    <color name="translucent_black">#00000000</color>
+    <color name="switch_view_bg_color">#f9a825</color>
+
+
+    <color name="color_app_73d4d4d4">#73d4d4d4</color>
+    <color name="color_app_66d4d4d4">#66d4d4d4</color>
+    <color name="color_app_59d4d4d4">#59d4d4d4</color>
+    <color name="color_app_d4d4d4">#d4d4d4</color>
+    <color name="color_app_00000000">#00000000</color>
+
+
+    <!-- Trim -->
+
+    <color name="video_editor_progress_popup_textcolor">#f5f5f5</color>
+    <color name="video_editor_black">#ff000000</color>
+    <color name="video_editor_white">#ffffffff</color>
+    <color name="video_editor_black_shadow">#4D000000</color>
+    <color name="video_editor_text_color">#ffcc00</color>
+    <color name="video_editor_text_color_Right">#fafafa</color>
+    <color name="video_editor_timeline_background_color">#b3000000</color>
+    <color name="video_editor_transparent">#00000000</color>
+    <color name="setting_sub_list_selected_text_color">@color/primary_dark</color>
+
+    <color name="custom_dialog_button_disabled_color">#66499ebd</color>
+    <color name="custom_dialog_button_enabled_color">#499ebd</color>
+
+    <color name="image_viewer_bg_color_after_tap">#000000</color>
+    <color name="image_viewer_bg_color_before_tap">#fafafa</color>
+    <color name="winset_list_divider_color">#e6e6e6</color>
+
+
+    <color name="color_app_e09721">#e09721</color>
+    <color name="color_primary_op_15">#26fafafa</color>
+
+    <color name="detailview_osd_gredient_start_color">#99000000</color>
+    <color name="detailview_osd_gredient_end_color">#00000000</color>
+
+    <color name="listview_background_color">#fafafa</color>
+
+    <color name="google_map_magnify_icon_color">#4d252525</color>
+
+    <color name="tab_text_shadow_color_active">#80f9a825</color>
+    <color name="tab_text_shadow_color_inactive">#80999999</color>
+    <color name="request_permission_rationale_popup_image_background_color">#919799</color>
+
+    <color name="dialog_help_intro_color">#ccf9a825</color>
+    <color name="dialog_help_intro_tv_title_text_color">#000000</color>
+    <color name="dialog_help_intro_tv_msg_text_color">#cc000000</color>
+
+    <color name="color_app_33000000">#33000000</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="black_opacity_40">#66000000</color>
+    <color name="black_opacity_35">#59000000</color>
+    <color name="black_opacity_25">#3F000000</color>
+    <color name="black_opacity_20">#33000000</color>
+    <color name="black_opacity_01">#01000000</color>
+    <color name="white_opacity_30">#4CFFFFFF</color>
+
+
+    <!-- Winset -->
+    <color name="tw_radio_on">#f9a825</color>
+    <color name="tw_radio_off">#737373</color>
+    <color name="font_color_action_bar_button_title">#f9a825</color>
+
+    <color name="color_action_bar_back">#499ebd</color>
+    <color name="color_action_under_line">#d4d4d4</color>
+
+    <color name="color_previous_next_button_image">#323232</color>
+    <color name="color_previous_next_button_text">@color/color_252525_op85</color>
+    <color name="color_previous_next_button_text_dim">@color/color_252525_op28</color>
+
+
+    <!-- Gear 360 -->
+    <color name="color_app_theme">#499ebd</color>
+    <color name="color_gallery_ic_detail_ripple">#29000000</color>
+    <color name="color_check_box_on">#fafafa</color>
+    <color name="color_check_box_off">#737373</color>
+    <color name="color_check_box_theme_on">@color/color_app_theme</color>
+    <color name="color_check_box_theme_off">#737373</color>
+    <color name="color_check_box_text">#252525</color>
+    <color name="color_ab_more_button">@color/color_app_theme</color>
+    <color name="color_ab_more_button_white">#fafafa</color>
+    <color name="color_details_background">#4d000000</color>
+    <color name="color_player_top_bottom_panel_background_outer">#4d000000</color>
+    <color name="color_player_top_bottom_panel_background_inner">#00000000</color>
+
+    <!-- RVF -->
+    <color name="color_rvf_mode_text">#fffafafa</color>
+    <color name="color_rvf_mode_text_pressed">#ffff00</color>
+
+    <!--reza.rah; Intial set page color code-->
+    <color name="black_opacity_85">#D9252525</color>
+    <color name="black_opacity_100">#ff979797</color>
+    <color name="black_opacity_101">#fffafafa</color>
+    <color name="black_opacity_102">#ff505050</color>
+    <!-- mustafiz.r Home page color code-->
+    <color name="black_opacity_90">#E6252525</color>
+    <color name="black_opacity_54">#8A252525</color>
+    <color name="black_opacity_109">#FF252525</color>
+    <color name="orange_opacity_90">#E6e09721</color>
+    <color name="color_edge_effect_opacity_15">#26F9A825</color>
+
+    <!--new UI COLOR ADDED FOR SETTTING HOME PAGE // badsha.a-->
+    <color name="settings_top_group_color_1">#FF6600</color>
+    <color name="white_background_color">#FFFFFF</color>
+    <color name="settings_storage_ring_secondary_color">#E1E1E1</color>
+    <color name="settings_storage_ring_primary_color">#f9a825</color>
+    <color name="settings_storage_text_color_info">#8C000000</color>
+    <color name="settings_top_group_color_2">#78252525</color>
+    <!--taufiq.khan updated the layout of settings color-->
+    <color name="samsung_black">#ff252525</color>
+    <color name="version_update_black_light">#80252525</color>
+    <color name="btn_black">#ff252525</color>
+
+    <!-- Setup BT List -->
+    <color name="color_setup_bt_list_text_title">@color/color_252525_op85</color>
+    <color name="color_setup_bt_list_text_sub_title">#979797</color>
+    <color name="color_setup_bt_list_text_list_item">#979797</color>
+    <color name="color_setup_bt_list_text_device_button_selected">#e09721</color>
+    <color name="color_setup_bt_list_text_device_button_normal">#969696</color>
+    <color name="color_setup_bt_list_text_no_device_found_description">#66252525</color>
+
+    <color name="color_setup_bt_list_layout_list_item">#ffffff</color>
+    <color name="color_setup_bt_list_layout_list_item_stroke">#f9a825</color>
+    <color name="color_setup_bt_list_layout_list_item_shadow">@color/color_000000_op5</color>
+    <color name="color_setup_bt_list_layout_page_indicator_focused">#313131</color>
+    <color name="color_setup_bt_list_layout_page_indicator_unfocused">@color/color_313131_op25
+    </color>
+
+    <color name="setup_bt_list_key_description_page_background">#fafafa</color>
+    <color name="setup_bt_list_key_description_page_text">#505050</color>
+    <color name="setup_bt_list_key_description_page_text_sub">#979797</color>
+
+    <color name="setup_bt_list_guide_change_text">@color/color_252525_op50</color>
+    <color name="setup_bt_list_guide_change_spinner_item_text">@color/color_252525_op85</color>
+
+    <!-- Legal Notice -->
+    <color name="legal_notice_text_title">#fafafa</color>
+    <color name="legal_notice_text_title_background">@color/primary</color>
+    <color name="legal_notice_text_description">#505050</color>
+    <color name="legal_notice_text_checkbox">#979797</color>
+    <color name="legal_notice_text_checkbox_dim">@color/color_979797_op37</color>
+    <color name="legal_notice_text_checkbox_hyperlink">@color/primary</color>
+    <color name="legal_notice_text_checkbox_hyperlink_dim">@color/color_f9a825_op37</color>
+
+    <!-- camera setting sharpness -->
+    <color name="camera_setting_sharpness_text_label">#545454</color>
+    <color name="camera_setting_sharpness_layout_slider_tick_mark">#d6d6d6</color>
+    <color name="camera_setting_sharpness_layout_slider_bar">#d6d6d6</color>
+    <color name="camera_setting_sharpness_layout_slider_thumb">#56c0e5</color>
+
+    <color name="play_speed_tick_mark">#fafafa</color>
+    <!-- Contact manager part -->
+    <color name="letter_tile_font_color">#ffffff</color>
+    <color name="avatar_thumbnail_stroke">#66FAFAFA</color>
+    <color name="basic_tint">#828282</color>
+    <color name="basic_tint_1">#dbd4c7</color>
+    <color name="basic_tint_2">#D9BF30</color>
+    <color name="basic_tint_3">#73C778</color>
+    <color name="basic_tint_4">#ACD5DC</color>
+    <color name="default_white_color">#FFFAFAFA</color>
+    <color name="composer_editor_divider">#ccd3d9</color>
+    <color name="composer_edit_field_color">#000000</color>
+    <color name="composer_edit_field_hint_color">#d4d4d4</color>
+
+    <color name="recipient_background_color">#ffffff</color>
+    <color name="recipient_text_color">#000000</color>
+    <color name="recipient_label_color">#FF6B6F72</color>
+    <color name="recipient_name_color">#FF000000</color>
+    <color name="recipient_number_color">#FF6B6F72</color>
+    <color name="invite_done_button_highlight">#27000000</color>
+    <color name="to_button_text_color">#252525</color>
+    <color name="to_button_text_hint_color">#a3a3a3</color>
+    <color name="invite_share_your_link_text_color">#505050</color>
+    <color name="remove_icon_contact_picker">#f25d5d</color>
+    <color name="contact_picker_save_cancel_primary_color">#e09721</color>
+
+    <!--rvf_settings_storage dimensions -->
+    <!-- taufiq.khan updated the layout according to GUI v1.4-->
+    <color name="rvf_settings_progressbar_background">#EDe1e1e1</color>
+    <color name="rvf_settings_progressbar_color">#CCf2a11f</color>
+    <color name="rvf_settings_progressbar_used_color">#66f7a92b</color>
+    <color name="rvf_settings_details_storage_color">#ff252525</color>
+    <color name="rvf_settings_storage_number_color">#ff505050</color>
+    <color name="rvf_settings_instroke_color">#ffff8f0b</color>
+
+    <color name="lvb_title_focus_in_line_color">#99FFFF</color>
+
+    <color name="default_text_color">#FFFAFAFA</color>
+    <color name="default_black_color">#FF000000</color>
+    <color name="chat_user_id_text_color">#00fff0</color>
+
+    <color name="sign_popup_confirm_enable">#fafafa</color>
+    <color name="sign_popup_confirm_disable">#66fafafa</color>
+
+    <color name="checkbox_color_on">#1ed0d0</color>
+    <color name="checkbox_color_off">#fafafa</color>
+    <color name="status_bar_color">#fffafafa</color>
+
+    <!-- LVB Part End -->
+
+    <color name="color_app_cccccc">#cccccc</color>
+
+    <!-- Color add for SGI -->
+    <color name="scroll_box_color">#969696</color>
+    <!-- Album -->
+    <color name="color_bitmap_new">#e09721</color>
+    <color name="color_data">#252525</color>
+    <color name="color_bitmaps_count">#979797</color>
+    <color name="color_rectangle_new">#e09721</color>
+    <color name="color_stroke_area">#000000</color>
+    <color name="home_page_divider_color">#11000000</color>
+
 </resources>

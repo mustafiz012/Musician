@@ -15,9 +15,31 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
+    <style name="ButtonRippleStyle" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">#20F15A2B</item>
+    </style>
+
+    <style name="ButtonRippleStyleWhite" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/color_ffb335_op20</item>
+    </style>
+
+    <style name="ButtonRippleStyleBlack" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/btn_black</item>
+    </style>
+
+    <style name="ButtonRippleStyleSeaGreen" parent="Material.Drawable.Ripple.Wave.Light">
+        <item name="android:background">@null</item>
+        <item name="rd_rippleColor">@color/color_ffb335_op20</item>
+    </style>
+
+
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
+
     <style name="Theme.Transparent" parent="android:Theme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -26,5 +48,4 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
-
 </resources>
