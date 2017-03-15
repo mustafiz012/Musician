@@ -2,11 +2,8 @@
     <string name="app_name">Musician</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_exit">Exit</string>
+    <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="facebook_app_id">1111111100000000</string>
-    <string name="fb_login_protocol_scheme">fb1111111100000000</string>
-
     <string name="title_activity_now_playing">Now Playing</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
@@ -14,4 +11,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_playing">Musician</string>
+    <string name="title_activity_songs">SongsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string-array name="song_properties">
+        <item>Share via</item>
+        <item>Set as</item>
+        <item>Add to playlist</item>
+        <item>Add to quick list</item>
+        <item>Delete</item>
+    </string-array>
+    <string name="title_activity_current_playlist">Now Playing</string>
 </resources>

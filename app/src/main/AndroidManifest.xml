@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="musician.kuet.musta">
+          package="musician.kuet.musta">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITe_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <meta-data android:name="com.facebook.sdk.ApplicationId"
-               android:value="@string/facebook_app_id"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -15,38 +11,32 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:launchMode="singleTop"
             android:name=".NowPlaying"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_now_playing"
-            android:theme="@style/FullscreenTheme" />
+            android:launchMode="singleTop"
+            android:theme="@style/FullscreenTheme"/>
         <activity
-            android:launchMode="singleTask"
             android:name=".Playing"
             android:alwaysRetainTaskState="true"
-            android:label="@string/title_activity_playing">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_playing"
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges=
-                      "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:label="@string/app_name" />
-
         <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/fb_login_protocol_scheme" />
-            </intent-filter>
+            android:name=".CurrentPlaylistActivity"
+            android:label="@string/title_activity_current_playlist"
+            android:parentActivityName=".Playing"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="musician.kuet.musta.Playing"/>
         </activity>
     </application>
 
