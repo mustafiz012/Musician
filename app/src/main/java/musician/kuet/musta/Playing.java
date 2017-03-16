@@ -170,7 +170,7 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
     private BroadcastReceiver mNoisyAudioReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
+			/*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
                 Log.i("Headset ","disconnected");
             }else
             */
@@ -179,16 +179,17 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
                 switch (state) {
                     case 0: {
                         Log.i("state", "Headset is unplugged");
-                        if (player.isPlaying()) {
+                        if (isPlugUnplugOccurred && player.isPlaying()) {
                             setPlayPauseButtonClickListener();
-                            isPlugUnplugOccurred = true;
+                            isPlugUnplugOccurred = false;
                         }
                         break;
                     }
                     case 1: {
                         Log.i("state", "Headset is plugged");
-                        if (player != null && !player.isPlaying() && isPlugUnplugOccurred) {
-                            setPlayPauseButtonClickListener();
+                        if (player != null && !isPlugUnplugOccurred) {
+                            isPlugUnplugOccurred = true;
+                            //setPlayPauseButtonClickListener();
                         }
                         break;
                     }
@@ -249,6 +250,7 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
         //player.setOnCompletionListener(this);
         nowPlayingSongs.setOnClickListener(this);
         homeFab = (FloatingActionButton) findViewById(R.id.fab_home);
+        homeFab.setOnClickListener(this);
         showPlayerState = (LinearLayout) findViewById(R.id.showPlayerState);
         showPlayerState.setOnClickListener(this);
     }
@@ -490,44 +492,9 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
         }
         Toast.makeText(this, "Player States restored", Toast.LENGTH_SHORT).show();
     }
-    /*
-    private String getCurrentFileName(int currentPosition) {
-		String songName = null;
-		Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
-		songName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
-		return songName;
-	}
-
-	private String getCurrentArtistName(int currentPosition) {
-		String artistName = null;
-		Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
-		artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
-		return artistName;
-	}
-
-	private Drawable getCurrentAlbumArt(int currentPosition) {
-		String artistName = null;
-		Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
-		Log.i("albumArt: ", cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
-		artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AlbumColumns.ALBUM_ART));
-		//Drawable img = Drawable.createFromPath(coverPath);
-		Drawable image = null;
-		if (artistName != null)
-			image = Drawable.createFromPath(artistName);
-		//albumcover.setImageDrawable(img);
-		return image;
-	}
-
-	private String getCurrentFile(int currentPosition) {
-		songPositionFromList = currentPosition;
-		String songData = null;
-		Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
-		songData = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-		return songData;
-	}*/
 
     private void setActionBarStatus() {
-        if (songPositionFromList==-1)
+        if (songPositionFromList == -1)
             songPositionFromList = lastPlayedSong;
         currentSongState.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistNameState.setText(getCurrentArtistName(songPositionFromList));
@@ -760,13 +727,6 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
     public void onCompletion(MediaPlayer mp) {
         int currentSongPosition = songPositionFromList;
         Log.i("NowPlaying", "onCompletion");
-        //Playing next song automatically
-        mp.stop();
-        mp.reset();
-        //if (isDialogAOk == true)
-        //updateSongInfoFromDialog(position);
-        //Log.i("dialog index:", "" + position);
-
         if (shuffleFlag && !isRepeatOneOn) {
             songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
         } else if (shuffleFlag && isRepeatOn) {
@@ -779,49 +739,6 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
         Log.i("onCompletion called", " " + songPositionFromList);
         startPlay(getCurrentFile(songPositionFromList));
     }
-
-	/*private class MediaCursorAdapter extends SimpleCursorAdapter {
-
-		public MediaCursorAdapter(Context context, int layout, Cursor c) {
-			super(context, layout, c,
-					new String[]{MediaStore.MediaColumns.TITLE, MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.AudioColumns.DURATION},
-					new int[]{R.id.displayname, R.id.title, R.id.duration});
-		}
-
-		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
-			TextView title = (TextView) view.findViewById(R.id.title);
-			TextView name = (TextView) view.findViewById(R.id.displayname);
-			TextView duration = (TextView) view.findViewById(R.id.duration);
-
-			name.setText(cursor.getString(
-					cursor.getColumnIndex(MediaStore.MediaColumns.TITLE)));
-
-			title.setText(cursor.getString(
-					cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)));
-
-			long durationInMs = Long.parseLong(cursor.getString(
-					cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
-
-			double durationInMin = ((double) durationInMs / 1000.0) / 60.0;
-
-			durationInMin = new BigDecimal(Double.toString(durationInMin)).setScale(2, BigDecimal.ROUND_UP).doubleValue();
-
-			duration.setText("" + durationInMin);
-
-			view.setTag(cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA)));
-		}
-
-		@Override
-		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			LayoutInflater inflater = LayoutInflater.from(context);
-			View v = inflater.inflate(R.layout.listitem, parent, false);
-
-			bindView(v, context, cursor);
-
-			return v;
-		}
-	}*/
 
     private Runnable UpdateSongTimeT = new Runnable() {
         @Override
@@ -1176,16 +1093,19 @@ public class Playing extends RootMediaActivity implements View.OnClickListener, 
                         previousSongIndex--;
                         if (previousSongIndex >= 0 && previousSongIndex < totalSongs) {
                             Log.i("Previous button clicked", "available pre " + previousSongPositions.get(previousSongIndex));
-                            startPlay(getCurrentFile(previousSongPositions.get(previousSongIndex)));
+                            songPositionFromList = previousSongPositions.get(previousSongIndex);
+                            startPlay(getCurrentFile(songPositionFromList));
                             //Log.i("seekbarchangedPre+", "" + isSeekBarChangedListenerStarted);
                             //setSeekBarChangedListener();
                         } else {
-                            startPlay(getCurrentFile(previousSongPositions.get(0)));
+                            songPositionFromList = previousSongPositions.get(0);
+                            startPlay(getCurrentFile(songPositionFromList));
                             Log.i("Previous button clicked", "available pre " + previousSongPositions.get(0));
                             //setSeekBarChangedListener();
                         }
                     } else {
-                        startPlay(getCurrentFile(lastPlayedSong));
+                        songPositionFromList = lastPlayedSong;
+                        startPlay(getCurrentFile(songPositionFromList));
                         Log.i("Previous button clicked", "last played song" + lastPlayedSong);
                     }
                     //uri = Uri.parse(songList.getItemAtPosition(songPositionFromList).toString());
