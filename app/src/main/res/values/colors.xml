@@ -2,6 +2,8 @@
     <color name="black_overlay">#66000000</color>
     <color name="ColorPrimary">#FF5722</color>
     <color name="ColorPrimaryDark">#E64A19</color>
+    <color name="ColorAccent">#009688</color>
+    <color name="ColorAccentDark">#7f0a00a8</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#ff0000</color>

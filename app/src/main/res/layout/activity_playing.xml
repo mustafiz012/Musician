@@ -5,86 +5,144 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="musician.kuet.musta.Playing">
-<!--
-http://stackoverflow.com/questions/40578157/ripple-effect-for-pre-lollipop
-http://rey5137.com/material/
--->
+
     <LinearLayout
-        android:id="@+id/parentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/actionbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:elevation="3dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/songsSize"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:text="0 Songs"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <com.rey.material.widget.Button
-                android:id="@+id/playingSong"
-                style="@style/ButtonRippleStyleSeaGreen"
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/actionbar_forward"
-                app:rd_enable="true" />
+            <include layout="@layout/content_playing" />
         </LinearLayout>
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/actionbar_layout"
-            android:layout_centerHorizontal="true"
-            android:choiceMode="singleChoice"
-            android:focusable="true"
-            android:listSelector="@color/accent_material_dark"
-            android:scrollbarFadeDuration="300"
-            android:scrollbarSize="10dp"
-            android:scrollbarStyle="outsideOverlay" />
+        <LinearLayout
+            android:id="@+id/player_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/color_app_tw_actionbar_back_color_selected"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <com.rey.material.widget.LinearLayout
+                android:id="@+id/showPlayerState"
+                style="@style/ButtonRippleStyleWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                app:rd_enable="true">
+
+                <TextView
+                    android:id="@+id/currentSongState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/songList"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/songList"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Nothing..."
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/accent_material_dark"
+                    android:textSize="20dip" />
+
+                <TextView
+                    android:id="@+id/currentSongArtistNameState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="------"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#cfcfff"
+                    android:textSize="13dip" />
+            </com.rey.material.widget.LinearLayout>
+
+            <com.rey.material.widget.ImageButton
+                android:id="@+id/playPauseState"
+                style="@style/ButtonRippleStyleWhite"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_play"
+                app:rd_enable="true" />
+        </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/shuffle_all_songs"
+        android:id="@+id/fab_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end"
-        android:clickable="true"
-        android:elevation="4dp"
-        android:src="@mipmap/shuffle"
-        app:fabSize="normal"
-        app:rippleColor="@color/white" />
+        android:layout_centerVertical="true"
+        android:layout_gravity="end"
+        app:srcCompat="@drawable/ic_action_shuffle" />
 
-    <include
-        android:id="@+id/now_playing_layout"
-        layout="@layout/activity_now_playing"
+    <!--<LinearLayout
+        android:id="@+id/player_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/battery_indicator_battery_status_text_low_battery"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <include
-        android:id="@+id/current_playlist"
-        layout="@layout/current_playlist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currentSong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/songList"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/songList"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Nothing..."
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/accent_material_dark"
+                android:textSize="20dip"/>
+
+            <TextView
+                android:id="@+id/currentSongArtistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="&#45;&#45;&#45;&#45;&#45;&#45;"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#cfcfff"
+                android:textSize="13dip"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/playPause"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_action_play"/>
+    </LinearLayout>-->
 
 </RelativeLayout>
