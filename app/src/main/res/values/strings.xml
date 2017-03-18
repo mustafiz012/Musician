@@ -21,5 +21,6 @@
         <item>Add to quick list</item>
         <item>Delete</item>
     </string-array>
-    <string name="title_activity_current_playlist">Now Playing</string>
+    <string name="title_activity_current_playlist">Now playing</string>
+    <string name="title_activity_main">Musician</string>
 </resources>
