@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="musician.kuet.musta.Playing"
+    tools:context="musician.kuet.musta.MainActivity"
     tools:showIn="@layout/activity_playing">
 
     <LinearLayout
@@ -21,7 +21,6 @@
             android:id="@+id/actionbar_layout"
             android:layout_width="583dp"
             android:layout_height="48dp"
-            android:elevation="3dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -58,7 +57,6 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
         android:clickable="true"
-        android:elevation="4dp"
         android:src="@mipmap/shuffle"
         android:visibility="gone"
         app:fabSize="normal"

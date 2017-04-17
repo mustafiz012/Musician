@@ -30,6 +30,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -193,9 +194,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 		switch (item.getItemId()) {
 			case android.R.id.home: {
 				Logging.getInstance().I(TAG, "MainActivity Back btn");
-				findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+				/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
 				findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
-				setActionBarStatus();
+				setActionBarStatus();*/
+				visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
 				return true;
 			}
 			case R.id.main_action_search: {
@@ -246,9 +248,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 	@Override
 	public void onBackPressed() {
 		if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
-			findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+			/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
 			findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
-			setActionBarStatus();
+			setActionBarStatus();*/
+			visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
 			return;
 		}
 		if (doubleBackToExitPressedOnce) {
@@ -317,6 +320,16 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 		Logging.getInstance().I(TAG, "onPause");
 		//finish();
 	}
+
+    private void visibleAnimation(View visible, View gone, int duration) {
+        TranslateAnimation animationView = new TranslateAnimation(0, -visible.getWidth(), 0, 0);
+        animationView.setDuration(duration);
+        animationView.setFillBefore(true);
+        visible.startAnimation(animationView);
+        visible.setVisibility(View.VISIBLE);
+        gone.setVisibility(View.GONE);
+        setActionBarStatus();
+    }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -742,13 +755,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 		switch (id) {
 			case R.id.fab_main: {
 				if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
-					findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
+					/*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
 					findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();
+					setActionBarStatus();*/
+                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
 				} else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
-					findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+					/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
 					findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();
+					setActionBarStatus();*/
+                    visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
 				}
 				break;
 			}
@@ -832,8 +847,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 					@Override
 					public void run() {
 						if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
-							findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-							findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
+							/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+							findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);*/
+                            visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
 						}
 					}
 				}, 100);
@@ -1036,9 +1052,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 			}
 			case R.id.showPlayerState: {
 				if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-					findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
+					/*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
 					findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();
+					setActionBarStatus();*/
+                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
 				}
 				break;
 			}
@@ -1055,8 +1072,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 		songPositionFromList = position;
 		Log.i("Main playlist", "item selected" + songPositionFromList);
 		if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-			findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-			findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
+			/*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
+			findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
+			visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
 		}
 		startPlay(getCurrentFile(position));
 		//updateSongInfoFromDialog(position);

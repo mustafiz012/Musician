@@ -13,7 +13,6 @@
         android:id="@+id/actionbar_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:elevation="3dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
