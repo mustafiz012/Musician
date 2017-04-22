@@ -1,10 +1,15 @@
 package musician.kuet.musta;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 
@@ -24,16 +30,45 @@ public class RootMediaActivity extends AppCompatActivity {
     public Cursor gCursor = null;
     public int rootTotalSongs = 0;
     public ActionBar gActionBar = null;
+    private boolean isRootPermissionGranted = false;
+    private boolean isRootPermissionRequested = false;
+    private final static int READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 201;
+    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 202;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*gActionBar = getSupportActionBar();
-        gActionBar.hide();*/
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fetchAudioFiles();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE);
+            isRootPermissionRequested = true;
+        } else {
+            isRootPermissionGranted = true;
+        }
+
+        if (isRootPermissionGranted && !isRootPermissionRequested) {
+            fetchAudioFiles();
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE:{
+                if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    findViewById(R.id.fake_layout).setVisibility(View.GONE);
+                    findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                    fetchAudioFiles();
+                    isRootPermissionGranted = true;
+                    Log.i("RootMedia", "Granted");
+                }else{
+                    isRootPermissionGranted = false;
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
 
     public String getCurrentFileName(int currentPosition) {
         String songName = null;

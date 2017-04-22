@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,7 +26,7 @@
             android:ellipsize="marquee"
             android:gravity="center"
             android:text="0 Songs"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <com.rey.material.widget.Button
             android:id="@+id/playingSong"
@@ -38,7 +37,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/actionbar_forward"
-            app:rd_enable="true"/>
+            app:rd_enable="true" />
     </LinearLayout>
 
     <include
@@ -46,7 +45,7 @@
         layout="@layout/activity_now_playing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/home_page_song_list_layout"
@@ -67,7 +66,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.04000002"/>
+            app:layout_constraintVertical_bias="0.04000002" />
     </LinearLayout>
 
 </RelativeLayout>
