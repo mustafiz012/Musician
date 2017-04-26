@@ -88,6 +88,7 @@ public class CurrentPlaylistActivity extends RootMediaActivity implements Adapte
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.i("Changes: ", "" + newText);
                 return false;
             }
         });

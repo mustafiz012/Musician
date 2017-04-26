@@ -201,15 +201,18 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Logging.getInstance().I(TAG, "onItemClicked " + position);
-                        startPlay(getCurrentFile(filteredIndexes.get(position)));
+                        Logging.getInstance().I("Filtered", "onItemClicked " + position);
+                        Logging.getInstance().I("Filtered", "onItemClicked++ " + filteredIndexes.get(position));
+                        songPositionFromList = filteredIndexes.get(position);
+                        startPlay(getCurrentFile(songPositionFromList));
                         //updateSongInfoFromDialog(position);
                         Log.i("Search result", "" + position);
-                        if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
+                        /*if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
                             findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
                             //findViewById(R.id.parentLayout).setVisibility(View.GONE);
                             //findViewById(R.id.current_playlist).setVisibility(View.GONE);
-                        }
+                        }*/
+                        visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
                     }
                 });
                 return true;

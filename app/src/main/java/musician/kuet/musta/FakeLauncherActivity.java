@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class FakeLauncherActivity extends Activity {
 
@@ -21,36 +22,59 @@ public class FakeLauncherActivity extends Activity {
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     private Button allow_permission_fake = null;
+    private int splashDuration = 2000;
+    private TextView home_screen_app_name = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fake_launcher);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.fake_layout_toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.fake_layout_toolbar);
+        toolbar.setTitle(getString(R.string.app_name));*/
         allow_permission_fake = (Button) findViewById(R.id.allow_permission_fake);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //checking runtime permission
-            setRuntimePermissionRequest();
-            if (isPermissionGranted && !isPermissionRequested) {
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } else {
-                allow_permission_fake = (Button) findViewById(R.id.allow_permission_fake);
-                findViewById(R.id.application_name_home_screen).setVisibility(View.GONE);
-                allow_permission_fake.setVisibility(View.VISIBLE);
-                allow_permission_fake.setClickable(true);
-                allow_permission_fake.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setRuntimePermissionRequest();
+        home_screen_app_name = (TextView) findViewById(R.id.application_name_home_screen);
+        allow_permission_fake = (Button) findViewById(R.id.allow_permission_fake);
+
+        Thread splashThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int waited = 0;
+                    while (waited < splashDuration) {
+                        sleep(100);
+                        waited += 100;
                     }
-                });
+                } catch (Exception e) {
+                    e.toString();
+                } finally {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                //checking runtime permission
+                                setRuntimePermissionRequest();
+                                if (isPermissionGranted && !isPermissionRequested) {
+                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    finish();
+                                } else {
+                                    allow_permission_fake.setClickable(true);
+                                    allow_permission_fake.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            setRuntimePermissionRequest();
+                                        }
+                                    });
+                                }
+                            } else {
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                finish();
+                            }
+                        }
+                    });
+                }
             }
-        }else{
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
+        };
+        splashThread.start();
     }
 
     @Override
@@ -90,6 +114,12 @@ public class FakeLauncherActivity extends Activity {
                     isPermissionGranted = true;
                 } else {
                     isPermissionGranted = false;
+                    if (home_screen_app_name.getVisibility() == View.VISIBLE) {
+                        home_screen_app_name.setVisibility(View.GONE);
+                        allow_permission_fake.setVisibility(View.VISIBLE);
+                    } else {
+                        allow_permission_fake.setVisibility(View.VISIBLE);
+                    }
                     allow_permission_fake.setClickable(true);
                     allow_permission_fake.setOnClickListener(new View.OnClickListener() {
                         @Override
