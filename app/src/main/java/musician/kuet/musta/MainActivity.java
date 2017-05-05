@@ -2,6 +2,8 @@ package musician.kuet.musta;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -41,6 +44,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.SearchView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -99,11 +103,66 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     private boolean isPermissionRequested = false;
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
+    //Notification
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
+    private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
+    private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
+    private RemoteViews remoteViews;
+    private Context mContext;
+    BroadcastReceiver broadcastReceiver;
+    public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
+    public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
+    public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
+    Intent btn_noti_prev_song_btn_intent, btn_noti_play_pause_btn_intent, btn_noti_next_song_btn_intent;
+    IntentFilter intentFilterPrevSong = null;
+    IntentFilter intentFilterPlayPause = null;
+    IntentFilter intentFilterNextSong = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //notification implementation
+
+        mContext = this;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
+
+        remoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
+        remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+        remoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
+        remoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
+        remoteViews.setTextViewText(R.id.noti_current_song, "No song");
+
+        btn_noti_prev_song_btn_intent = new Intent(CUSTOM_NOTI_PREVIOUS_SONG);
+        btn_noti_prev_song_btn_intent.putExtra("prev_id", CUSTOM_NOTI_PREVIOUS_SONG_ID);
+        sendBroadcast(btn_noti_prev_song_btn_intent);
+
+        btn_noti_play_pause_btn_intent = new Intent(CUSTOM_NOTI_PLAY_PAUSE);
+        btn_noti_play_pause_btn_intent.putExtra("play_pause_id", CUSTOM_NOTI_PLAY_PAUSE_ID);
+        sendBroadcast(btn_noti_play_pause_btn_intent);
+
+        btn_noti_next_song_btn_intent = new Intent(CUSTOM_NOTI_NEXT_SONG);
+        btn_noti_next_song_btn_intent.putExtra("next_id", CUSTOM_NOTI_NEXT_SONG_ID);
+        sendBroadcast(btn_noti_next_song_btn_intent);
+
+        PendingIntent pendingIntentForPrevSong = PendingIntent.getBroadcast(mContext, 111, btn_noti_prev_song_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_previous_song, pendingIntentForPrevSong);
+        intentFilterPrevSong = new IntentFilter(CUSTOM_NOTI_PREVIOUS_SONG);
+
+        PendingIntent pendingIntentForPlayPause = PendingIntent.getBroadcast(mContext, 112, btn_noti_play_pause_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_play_pause, pendingIntentForPlayPause);
+        intentFilterPlayPause = new IntentFilter(CUSTOM_NOTI_PLAY_PAUSE);
+
+        PendingIntent pendingIntentForNextSong = PendingIntent.getBroadcast(mContext, 113, btn_noti_next_song_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_next_song, pendingIntentForNextSong);
+        intentFilterNextSong = new IntentFilter(CUSTOM_NOTI_NEXT_SONG);
+
+        broadcastReceiver = new ButtonClickListenerEvent();
+
         TAG = getApplicationContext().getClass().getSimpleName().toString();
         allowPermission = (Button) findViewById(R.id.allow_permission);
         allowPermission.setOnClickListener(this);
@@ -233,7 +292,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             case android.R.id.home: {
                 Logging.getInstance().I(TAG, "MainActivity Back btn");
                 /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-				findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
 				setActionBarStatus();*/
                 visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
                 return true;
@@ -286,8 +345,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
-			/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-			findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
+            /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+            findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
 			setActionBarStatus();*/
             visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
             return;
@@ -327,6 +386,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             }
         }
         Logging.getInstance().I(TAG, "onResumed");
+        registerReceiver(broadcastReceiver, intentFilterPrevSong);
+        registerReceiver(broadcastReceiver, intentFilterPlayPause);
+        registerReceiver(broadcastReceiver, intentFilterNextSong);
     }
 
     @Override
@@ -344,6 +406,44 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         savePlayerStates("repeatOneOn", isRepeatOneOn);
         savePlayerIntegerStates("lastPlayedSong", lastPlayedSong);
         Logging.getInstance().I(TAG, "onStop");
+        Intent notificationIntent = new Intent(mContext, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+        builder = new NotificationCompat.Builder(mContext);
+        builder.setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                .setCustomBigContentView(remoteViews)
+                .setContentIntent(pendingIntent);
+        notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        /*notificationManager.notify(CUSTOM_NOTI_PLAY_PAUSE_ID, builder.build());
+        notificationManager.notify(CUSTOM_NOTI_NEXT_SONG_ID, builder.build());*/
+    }
+
+    public class ButtonClickListenerEvent extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            //notificationManager.cancel(intent.getExtras().getInt("prev_id"));
+            /*if (intent.getAction().equals(CUSTOM_NOTI)) {
+                Log.i("Notific", "Player not null");
+            } else {
+                Log.i("Notific", "Player null");
+            }*/
+            if (intent.getExtras().getInt("prev_id") == CUSTOM_NOTI_PREVIOUS_SONG_ID) {
+                Log.i("Notification", "Previous");
+                setPreviousSongButtonClickListener();
+            } else if (intent.getExtras().getInt("play_pause_id") == CUSTOM_NOTI_PLAY_PAUSE_ID) {
+                Log.i("Notification", "PlayPause");
+                if (player != null) {
+                    //Log.i("Notific", "Player not null");
+                    setPlayPauseButtonClickListener();
+                } else {
+                    Log.i("Notific", "Player null");
+                }
+            } else if (intent.getExtras().getInt("next_id") == CUSTOM_NOTI_NEXT_SONG_ID) {
+                Log.i("Notification", "Next");
+                setNextSongButtonClickListener();
+            }
+        }
     }
 
     @Override
@@ -403,6 +503,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
         player.reset();
         player.release();
+        unregisterReceiver(broadcastReceiver);
     }
 
     private void setPlayPauseButtonClickListener() {
@@ -430,11 +531,108 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
     }
 
+    private void setNextSongButtonClickListener() {
+        try {
+                    /*player.stop();
+                    player.reset();*/
+            if (shuffleFlag) {
+                songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
+            } else {
+                songPositionFromList = (songPositionFromList + 1) % totalSongs;
+            }
+                    /*uri = Uri.parse(mediaCursorAdapter.getCursor().getString(songPositionFromList));
+                    try {
+                        player.setDataSource(getApplicationContext(), uri);
+                        player.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.i("songPositionFromList ", "" + songPositionFromList);
+                    player.start();
+                    updateSongInfo(songPositionFromList);
+                    playPause.setImageResource(R.drawable.btn_pause);*/
+            if (songPositionFromList == -1) {
+                Log.i("Next button clicked", "no song selected " + lastPlayedSong);
+                startPlay(getCurrentFile(lastPlayedSong));
+                //Log.i("seekbarchangedNext+", "" + isSeekBarChangedListenerStarted);
+                //setSeekBarChangedListener();
+            } else {
+                startPlay(getCurrentFile(songPositionFromList));
+                Log.i("Next button clicked", "Player already running" + lastPlayedSong);
+                //Log.i("seekbarchangedNext-", "" + isSeekBarChangedListenerStarted);
+                //setSeekBarChangedListener();
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPreviousSongButtonClickListener() {
+        try {
+                    /*player.stop();
+                    player.reset();*/
+            //Log.i("Previous ", "" + songPositionFromList);
+                    /*if (songPositionFromList - 1 < 0) {
+                        if (shuffleFlag) {
+							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
+						} else {
+							songPositionFromList = totalSongs - 1;
+						}
+					} else {
+						if (shuffleFlag)
+							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
+						else
+							songPositionFromList--;
+					}
+
+					Log.i("PreviousFile ", songPositionFromList + "");*/
+            Log.i("previous list size", "" + previousSongPositions.size());
+            if (previousSongPositions.size() > 0) {
+                previousSongIndex--;
+                if (previousSongIndex >= 0 && previousSongIndex < totalSongs) {
+                    Log.i("Previous button clicked", "available pre " + previousSongPositions.get(previousSongIndex));
+                    songPositionFromList = previousSongPositions.get(previousSongIndex);
+                    startPlay(getCurrentFile(songPositionFromList));
+                    //Log.i("seekbarchangedPre+", "" + isSeekBarChangedListenerStarted);
+                    //setSeekBarChangedListener();
+                } else {
+                    songPositionFromList = previousSongPositions.get(0);
+                    startPlay(getCurrentFile(songPositionFromList));
+                    Log.i("Previous button clicked", "available pre " + previousSongPositions.get(0));
+                    //setSeekBarChangedListener();
+                }
+            } else {
+                songPositionFromList = lastPlayedSong;
+                startPlay(getCurrentFile(songPositionFromList));
+                Log.i("Previous button clicked", "last played song" + lastPlayedSong);
+            }
+            //uri = Uri.parse(songList.getItemAtPosition(songPositionFromList).toString());
+            //uri = Uri.parse(songs.get(songPositionFromList).toString());
+                    /*try {
+                        //player.setDataSource(getApplicationContext(), uri);
+                        player.setDataSource(currentFile);
+                        player.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    playPause.setImageResource(R.drawable.btn_pause);
+                    //Log.i("songPositionFromList ", "" + songPositionFromList);-
+                    player.start();
+                    updateSongInfo(songPositionFromList);*/
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
     private BroadcastReceiver mNoisyAudioReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-			/*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
-				Log.i("Headset ","disconnected");
+            /*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
+                Log.i("Headset ","disconnected");
             }else
             */
             if (intent.getAction().equals(AudioManager.ACTION_HEADSET_PLUG)) {
@@ -504,6 +702,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         if (player.isPlaying()) {
             playPause.setImageResource(R.drawable.btn_pause);
             playPauseState.setImageResource(R.drawable.ic_action_pause);
+
         } else {
             playPause.setImageResource(R.drawable.btn_play);
             playPauseState.setImageResource(R.drawable.ic_action_play);
@@ -518,8 +717,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         search_back_btn = (Button) findViewById(R.id.search_back_btn);
         search_song_et = (EditText) findViewById(R.id.search_song_et);
         searchView = (SearchView) findViewById(R.id.searchView);
-		/*floatingActionButton = (FloatingActionButton) findViewById(R.id.shuffle_all_songs);
-		floatingActionButton.setOnClickListener(this);*/
+        /*floatingActionButton = (FloatingActionButton) findViewById(R.id.shuffle_all_songs);
+        floatingActionButton.setOnClickListener(this);*/
         tvSongsSize = (TextView) findViewById(R.id.songsSize);
         songList = (ListView) findViewById(android.R.id.list);
         currentPlayList = (ListView) findViewById(R.id.lv_current_playlist);
@@ -745,8 +944,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             player.setDataSource(file);
             player.prepare();
             player.start();
-			/*if (!seekBarUpdating.isAlive())
-				seekBarUpdating.start();*/
+            /*if (!seekBarUpdating.isAlive())
+                seekBarUpdating.start();*/
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (IllegalStateException e) {
@@ -902,102 +1101,13 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
             //next song button action
             case R.id.next: {
-                try {
-					/*player.stop();
-                    player.reset();*/
-                    if (shuffleFlag) {
-                        songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-                    } else {
-                        songPositionFromList = (songPositionFromList + 1) % totalSongs;
-                    }
-                    /*uri = Uri.parse(mediaCursorAdapter.getCursor().getString(songPositionFromList));
-                    try {
-                        player.setDataSource(getApplicationContext(), uri);
-                        player.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //Log.i("songPositionFromList ", "" + songPositionFromList);
-                    player.start();
-                    updateSongInfo(songPositionFromList);
-                    playPause.setImageResource(R.drawable.btn_pause);*/
-                    if (songPositionFromList == -1) {
-                        Log.i("Next button clicked", "no song selected " + lastPlayedSong);
-                        startPlay(getCurrentFile(lastPlayedSong));
-                        //Log.i("seekbarchangedNext+", "" + isSeekBarChangedListenerStarted);
-                        //setSeekBarChangedListener();
-                    } else {
-                        startPlay(getCurrentFile(songPositionFromList));
-                        Log.i("Next button clicked", "Player already running" + lastPlayedSong);
-                        //Log.i("seekbarchangedNext-", "" + isSeekBarChangedListenerStarted);
-                        //setSeekBarChangedListener();
-                    }
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
+                setNextSongButtonClickListener();
                 break;
             }
 
             //previous song button action
             case R.id.previous: {
-                try {
-                    /*player.stop();
-                    player.reset();*/
-                    //Log.i("Previous ", "" + songPositionFromList);
-                    /*if (songPositionFromList - 1 < 0) {
-                        if (shuffleFlag) {
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						} else {
-							songPositionFromList = totalSongs - 1;
-						}
-					} else {
-						if (shuffleFlag)
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						else
-							songPositionFromList--;
-					}
-
-					Log.i("PreviousFile ", songPositionFromList + "");*/
-                    Log.i("previous list size", "" + previousSongPositions.size());
-                    if (previousSongPositions.size() > 0) {
-                        previousSongIndex--;
-                        if (previousSongIndex >= 0 && previousSongIndex < totalSongs) {
-                            Log.i("Previous button clicked", "available pre " + previousSongPositions.get(previousSongIndex));
-                            songPositionFromList = previousSongPositions.get(previousSongIndex);
-                            startPlay(getCurrentFile(songPositionFromList));
-                            //Log.i("seekbarchangedPre+", "" + isSeekBarChangedListenerStarted);
-                            //setSeekBarChangedListener();
-                        } else {
-                            songPositionFromList = previousSongPositions.get(0);
-                            startPlay(getCurrentFile(songPositionFromList));
-                            Log.i("Previous button clicked", "available pre " + previousSongPositions.get(0));
-                            //setSeekBarChangedListener();
-                        }
-                    } else {
-                        songPositionFromList = lastPlayedSong;
-                        startPlay(getCurrentFile(songPositionFromList));
-                        Log.i("Previous button clicked", "last played song" + lastPlayedSong);
-                    }
-                    //uri = Uri.parse(songList.getItemAtPosition(songPositionFromList).toString());
-                    //uri = Uri.parse(songs.get(songPositionFromList).toString());
-                    /*try {
-                        //player.setDataSource(getApplicationContext(), uri);
-                        player.setDataSource(currentFile);
-                        player.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    playPause.setImageResource(R.drawable.btn_pause);
-                    //Log.i("songPositionFromList ", "" + songPositionFromList);-
-                    player.start();
-                    updateSongInfo(songPositionFromList);*/
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }
+                setPreviousSongButtonClickListener();
                 break;
             }
             case R.id.playingSong: {

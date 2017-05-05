@@ -22,7 +22,7 @@ public class FakeLauncherActivity extends Activity {
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     private Button allow_permission_fake = null;
-    private int splashDuration = 2000;
+    private int splashDuration = 1000;
     private TextView home_screen_app_name = null;
 
     @Override

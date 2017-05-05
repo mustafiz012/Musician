@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/action_bar_with_search_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/playlist_actionbar_layout"
@@ -20,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.rey.material.widget.Button
                 android:id="@+id/playlist_action_bar_back_btn"
@@ -28,7 +29,7 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/actionbar_back"
-                app:rd_enable="true"/>
+                app:rd_enable="true" />
 
             <TextView
                 android:id="@+id/current_playlist_action_bar_activity_content"
@@ -40,15 +41,14 @@
                 android:text="Now playing"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/font_color_action_bar_title"
-                android:textStyle="normal"/>
+                android:textStyle="normal" />
 
             <SearchView
-                android:background="#00000000"
                 android:id="@+id/searchView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:clickable="true">
-            </SearchView>
+                android:background="#00000000"
+                android:clickable="true"></SearchView>
 
             <com.rey.material.widget.FrameLayout
                 android:id="@+id/playlist_action_bar_search_btn"
@@ -66,7 +66,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/search_btn"
                     android:clickable="false"
-                    android:focusable="false"/>
+                    android:focusable="false" />
             </com.rey.material.widget.FrameLayout>
             <!--
                     <Button
@@ -90,7 +90,7 @@
                 android:layout_width="46dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/actionbar_back"
-                app:rd_enable="true"/>
+                app:rd_enable="true" />
 
             <EditText
                 android:id="@+id/search_song_et"
@@ -98,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:background="#00000000"
                 android:hint="Search for songs"
-                android:textSize="16dp"/>
+                android:textSize="16dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -109,6 +109,6 @@
         android:layout_below="@+id/action_bar_with_search_layout"
         android:divider="#242424"
         android:dividerHeight="1dp"
-        android:listSelector="@color/accent_material_dark"/>
+        android:listSelector="@color/accent_material_dark" />
 
 </RelativeLayout>
