@@ -10,27 +10,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -907,6 +905,25 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         currentSongArtistNameState.setText(getCurrentArtistName(songPositionFromList));
         currentSong.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistName.setText(getCurrentArtistName(songPositionFromList));
+        Bitmap bitmap = null;
+        bitmap = getCurrentAlbumArt(mContext, songPositionFromList);
+        /*int width = this.getResources().getDisplayMetrics().widthPixels;
+        int height = (width*bitmap.getHeight())/bitmap.getWidth();
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);*/
+        if (bitmap != null) {
+            /*int width = thumbnail.getWidth();
+            int height = thumbnail.getHeight();
+            if (width > 0 && height > 0)
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+            Log.i("scale", width + " " + height);*/
+            thumbnail.setImageBitmap(bitmap);
+            thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            thumbnail.setImageResource(R.drawable.thumbnail);
+            thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
+            //Toast.makeText(mContext, "No albumart found for this song", Toast.LENGTH_SHORT).show();
+        }
+
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
             //homeFab.setVisibility(View.GONE);
             findViewById(R.id.player_layout).setVisibility(View.GONE);
@@ -953,7 +970,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         } catch (IOException e) {
             e.printStackTrace();
         }
-		/*if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
+        /*if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
             findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
             findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
         }*/
@@ -998,8 +1015,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             }
             case R.id.fab_main: {
                 if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
-					/*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
-					findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
+                    /*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
+                    findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
 					setActionBarStatus();*/
                     visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
                 } else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
