@@ -91,7 +91,7 @@ public class RootMediaActivity extends AppCompatActivity {
     }
 
     public Bitmap getCurrentAlbumArt(Context context, int currentPosition) {
-        Cursor cursor = null;
+        Cursor cursor;
         cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
         Long album_id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
         Log.i("Album ID : ", "" + album_id);
@@ -100,7 +100,7 @@ public class RootMediaActivity extends AppCompatActivity {
         try {
             final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
             Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
-            Log.i("Uri", ""+uri.toString());
+            Log.i("Uri", "" + uri.toString());
             ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
             if (pfd != null) {
                 FileDescriptor fd = pfd.getFileDescriptor();

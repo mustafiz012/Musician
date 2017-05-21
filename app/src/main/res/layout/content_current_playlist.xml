@@ -12,6 +12,8 @@
     <ListView
         android:id="@+id/now_playing_playlist"
         android:layout_width="0dp"
+        android:divider="@color/basic_list_divider"
+        android:listSelector="@drawable/custom_list_selector"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -30,7 +30,7 @@
                 app:rd_enable="true" />
 
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/black_overlay" />
 
@@ -71,7 +71,7 @@
             </LinearLayout>
 
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="@color/black_overlay" />
 
@@ -90,7 +90,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:background="@color/black_overlay"
             android:visibility="gone" />
 
@@ -98,8 +98,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp">
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp">
 
             <ImageView
                 android:id="@+id/thumbnail"
@@ -112,11 +112,11 @@
             android:id="@+id/playingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
             android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/actionbar_layout_now_playing"
             android:layout_toRightOf="@+id/actionbar_layout_now_playing"
-            android:layout_toEndOf="@+id/actionbar_layout_now_playing">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,48 +131,45 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.rey.material.widget.ImageButton
+                    <ImageButton
                         android:id="@+id/previous"
-                        style="@style/ButtonRippleStyleWhite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@null"
-                        android:src="@drawable/btn_previous"
-                        app:rd_enable="true" />
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_ripple_effect"
+                        app:srcCompat="@drawable/player_prev_song_btn" />
 
                     <View
-                        android:layout_width="2dp"
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/black_overlay" />
 
-                    <com.rey.material.widget.ImageButton
+                    <ImageButton
                         android:id="@+id/playPause"
-                        style="@style/ButtonRippleStyleWhite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@null"
-                        android:src="@drawable/btn_play"
-                        app:rd_enable="true" />
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_ripple_effect"
+                        app:srcCompat="@drawable/player_play_btn" />
 
                     <View
-                        android:layout_width="2dp"
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/black_overlay" />
 
-                    <com.rey.material.widget.ImageButton
+                    <ImageButton
                         android:id="@+id/next"
-                        style="@style/ButtonRippleStyleWhite"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@null"
-                        android:src="@drawable/btn_next"
-                        app:rd_enable="true" />
+                        android:layout_weight="1"
+                        android:background="@drawable/custom_ripple_effect"
+                        app:srcCompat="@drawable/player_next_song_btn" />
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/black_overlay" />
 
                 <RelativeLayout
@@ -209,7 +206,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/black_overlay" />
 
                 <LinearLayout
@@ -222,17 +219,16 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.rey.material.widget.Button
+                    <Button
                         android:id="@+id/repeat"
                         style="@style/ButtonRippleStyleWhite"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
-                        android:background="@mipmap/repeat_off"
-                        app:rd_enable="true" />
+                        android:background="@drawable/player_repeat_off_btn" />
 
                     <View
-                        android:layout_width="2dp"
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/black_overlay" />
 
@@ -245,28 +241,26 @@
                         android:layout_toLeftOf="@+id/shuffle"
                         android:layout_toRightOf="@+id/repeat"
                         android:layout_weight="1"
-                        android:indeterminate="false"
-                        android:thumb="@drawable/seek_handler" />
+                        android:indeterminate="false" />
 
                     <View
-                        android:layout_width="2dp"
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/black_overlay" />
 
-                    <com.rey.material.widget.Button
+                    <Button
                         android:id="@+id/shuffle"
                         style="@style/ButtonRippleStyleWhite"
                         android:layout_width="56dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
-                        android:background="@mipmap/shuffle_off"
-                        app:rd_enable="true" />
+                        android:background="@drawable/player_shuffle_off_btn" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/black_overlay" />
             </LinearLayout>
 

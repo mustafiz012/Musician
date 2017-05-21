@@ -698,11 +698,11 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
     private void setPlayerStates() {
         if (player.isPlaying()) {
-            playPause.setImageResource(R.drawable.btn_pause);
+            playPause.setImageResource(R.drawable.player_pause_btn);
             playPauseState.setImageResource(R.drawable.ic_action_pause);
 
         } else {
-            playPause.setImageResource(R.drawable.btn_play);
+            playPause.setImageResource(R.drawable.player_play_btn);
             playPauseState.setImageResource(R.drawable.ic_action_play);
         }
     }
@@ -877,23 +877,23 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
         if (shuffleOn) {
             shuffleFlag = true;
-            shuffle.setBackgroundResource(R.mipmap.shuffle);
+            shuffle.setBackgroundResource(R.drawable.player_shuffle_on_btn);
         } else {
             shuffleFlag = false;
-            shuffle.setBackgroundResource(R.mipmap.shuffle_off);
+            shuffle.setBackgroundResource(R.drawable.player_shuffle_off_btn);
         }
         if (repeatOn && !repeatOneOn) {
             isRepeatOn = true;
             isRepeatOneOn = false;
-            repeat.setBackgroundResource(R.mipmap.repeat);
+            repeat.setBackgroundResource(R.drawable.player_repeat_on_btn);
         } else if (repeatOneOn && !repeatOn) {
             isRepeatOneOn = true;
             isRepeatOn = false;
-            repeat.setBackgroundResource(R.mipmap.repeat_one);
+            repeat.setBackgroundResource(R.drawable.player_repeat_one_on_btn);
         } else if (!repeatOn && !repeatOneOn) {
             isRepeatOn = false;
             isRepeatOneOn = false;
-            repeat.setBackgroundResource(R.mipmap.repeat_off);
+            repeat.setBackgroundResource(R.drawable.player_repeat_off_btn);
         }
         //Toast.makeText(this, "Player States restored", Toast.LENGTH_SHORT).show();
     }
@@ -1020,7 +1020,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 					setActionBarStatus();*/
                     visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
                 } else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
-					/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+                    /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
 					findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
 					setActionBarStatus();*/
                     visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
@@ -1066,14 +1066,14 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     isRepeatOn = true;
                     isRepeatOneOn = false;
                     Toast.makeText(this, "Repeat On", Toast.LENGTH_SHORT).show();
-                    repeat.setBackgroundResource(R.mipmap.repeat);
+                    repeat.setBackgroundResource(R.drawable.player_repeat_on_btn);
                 } else if (isRepeatOn && !isRepeatOneOn) {
                     isRepeatOneOn = true;
                     isRepeatOn = false;
                     Toast.makeText(this, "RepeatOne On", Toast.LENGTH_SHORT).show();
-                    repeat.setBackgroundResource(R.mipmap.repeat_one);
+                    repeat.setBackgroundResource(R.drawable.player_repeat_one_on_btn);
                 } else {
-                    repeat.setBackgroundResource(R.mipmap.repeat_off);
+                    repeat.setBackgroundResource(R.drawable.player_repeat_off_btn);
                     Toast.makeText(this, "Repeat Off", Toast.LENGTH_SHORT).show();
                     isRepeatOn = false;
                     isRepeatOneOn = false;
@@ -1084,11 +1084,11 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             //shuffling songs sequence
             case R.id.shuffle: {
                 if (!shuffleFlag) {
-                    shuffle.setBackgroundResource(R.mipmap.shuffle);
+                    shuffle.setBackgroundResource(R.drawable.player_shuffle_on_btn);
                     Toast.makeText(this, "Shuffle On", Toast.LENGTH_SHORT).show();
                     shuffleFlag = true;
                 } else {
-                    shuffle.setBackgroundResource(R.mipmap.shuffle_off);
+                    shuffle.setBackgroundResource(R.drawable.player_shuffle_off_btn);
                     Toast.makeText(this, "Shuffle Off", Toast.LENGTH_SHORT).show();
                     shuffleFlag = false;
                 }
@@ -1138,7 +1138,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     }
                 }, 400);
                 break;
-            }
 			/*case R.id.shuffle_all_songs: {
 				//Toast.makeText(this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
 				if (songPositionFromList == -1) {
@@ -1168,6 +1167,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 				}
 				break;
 			}*/
+            }
             case R.id.playlist_action_bar_back_btn: {
                 new Handler().postDelayed(new Runnable() {
                     @Override
