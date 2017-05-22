@@ -10,11 +10,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -108,6 +110,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
     private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
     private RemoteViews remoteViews;
+    private RemoteViews smallRemoteViews;
     private Context mContext;
     BroadcastReceiver broadcastReceiver;
     public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
@@ -121,45 +124,14 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Log.i("Android-Version", "Pre-Lollipop");
+            setContentView(R.layout.activity_main_pre_lollipop);
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.i("Android-Version", "Post-Lollipop");
+            setContentView(R.layout.activity_main);
+        }
 
-        //notification implementation
-
-        mContext = this;
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
-
-        remoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
-        remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
-        remoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
-        remoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
-        remoteViews.setTextViewText(R.id.noti_current_song, "No song");
-
-        btn_noti_prev_song_btn_intent = new Intent(CUSTOM_NOTI_PREVIOUS_SONG);
-        btn_noti_prev_song_btn_intent.putExtra("prev_id", CUSTOM_NOTI_PREVIOUS_SONG_ID);
-        sendBroadcast(btn_noti_prev_song_btn_intent);
-
-        btn_noti_play_pause_btn_intent = new Intent(CUSTOM_NOTI_PLAY_PAUSE);
-        btn_noti_play_pause_btn_intent.putExtra("play_pause_id", CUSTOM_NOTI_PLAY_PAUSE_ID);
-        sendBroadcast(btn_noti_play_pause_btn_intent);
-
-        btn_noti_next_song_btn_intent = new Intent(CUSTOM_NOTI_NEXT_SONG);
-        btn_noti_next_song_btn_intent.putExtra("next_id", CUSTOM_NOTI_NEXT_SONG_ID);
-        sendBroadcast(btn_noti_next_song_btn_intent);
-
-        PendingIntent pendingIntentForPrevSong = PendingIntent.getBroadcast(mContext, 111, btn_noti_prev_song_btn_intent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.noti_previous_song, pendingIntentForPrevSong);
-        intentFilterPrevSong = new IntentFilter(CUSTOM_NOTI_PREVIOUS_SONG);
-
-        PendingIntent pendingIntentForPlayPause = PendingIntent.getBroadcast(mContext, 112, btn_noti_play_pause_btn_intent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.noti_play_pause, pendingIntentForPlayPause);
-        intentFilterPlayPause = new IntentFilter(CUSTOM_NOTI_PLAY_PAUSE);
-
-        PendingIntent pendingIntentForNextSong = PendingIntent.getBroadcast(mContext, 113, btn_noti_next_song_btn_intent, 0);
-        remoteViews.setOnClickPendingIntent(R.id.noti_next_song, pendingIntentForNextSong);
-        intentFilterNextSong = new IntentFilter(CUSTOM_NOTI_NEXT_SONG);
-
-        broadcastReceiver = new ButtonClickListenerEvent();
 
         TAG = getApplicationContext().getClass().getSimpleName().toString();
         allowPermission = (Button) findViewById(R.id.allow_permission);
@@ -209,6 +181,58 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         headsetUnpluggedIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         headsetPlugUnplugIntentFilter = new IntentFilter(AudioManager.ACTION_HEADSET_PLUG);
+        setupNotificationControl();
+    }
+
+    private void setupNotificationControl() {
+        //notification implementation
+        mContext = this;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification);
+        smallRemoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_small_view);
+        //smaller
+        smallRemoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
+        smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+        smallRemoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
+        smallRemoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
+        smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+        smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+        //bigger
+        remoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
+        remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+        remoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
+        remoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
+        remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+        remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+
+        btn_noti_prev_song_btn_intent = new Intent(CUSTOM_NOTI_PREVIOUS_SONG);
+        btn_noti_prev_song_btn_intent.putExtra("prev_id", CUSTOM_NOTI_PREVIOUS_SONG_ID);
+        sendBroadcast(btn_noti_prev_song_btn_intent);
+
+        btn_noti_play_pause_btn_intent = new Intent(CUSTOM_NOTI_PLAY_PAUSE);
+        btn_noti_play_pause_btn_intent.putExtra("play_pause_id", CUSTOM_NOTI_PLAY_PAUSE_ID);
+        sendBroadcast(btn_noti_play_pause_btn_intent);
+
+        btn_noti_next_song_btn_intent = new Intent(CUSTOM_NOTI_NEXT_SONG);
+        btn_noti_next_song_btn_intent.putExtra("next_id", CUSTOM_NOTI_NEXT_SONG_ID);
+        sendBroadcast(btn_noti_next_song_btn_intent);
+
+        PendingIntent pendingIntentForPrevSong = PendingIntent.getBroadcast(mContext, 111, btn_noti_prev_song_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_previous_song, pendingIntentForPrevSong);
+        smallRemoteViews.setOnClickPendingIntent(R.id.noti_previous_song, pendingIntentForPrevSong);
+        intentFilterPrevSong = new IntentFilter(CUSTOM_NOTI_PREVIOUS_SONG);
+
+        PendingIntent pendingIntentForPlayPause = PendingIntent.getBroadcast(mContext, 112, btn_noti_play_pause_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_play_pause, pendingIntentForPlayPause);
+        smallRemoteViews.setOnClickPendingIntent(R.id.noti_play_pause, pendingIntentForPlayPause);
+        intentFilterPlayPause = new IntentFilter(CUSTOM_NOTI_PLAY_PAUSE);
+
+        PendingIntent pendingIntentForNextSong = PendingIntent.getBroadcast(mContext, 113, btn_noti_next_song_btn_intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.noti_next_song, pendingIntentForNextSong);
+        smallRemoteViews.setOnClickPendingIntent(R.id.noti_next_song, pendingIntentForNextSong);
+        intentFilterNextSong = new IntentFilter(CUSTOM_NOTI_NEXT_SONG);
+
+        broadcastReceiver = new ButtonClickListenerEvent();
     }
 
     @Override
@@ -406,9 +430,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         Logging.getInstance().I(TAG, "onStop");
         Intent notificationIntent = new Intent(mContext, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+        PendingIntent pendingIntentSmall = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
         builder = new NotificationCompat.Builder(mContext);
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder.setCustomContentView(smallRemoteViews)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
+                .setContentIntent(pendingIntentSmall);
+
+        builder.setAutoCancel(true)
                 .setCustomBigContentView(remoteViews)
                 .setContentIntent(pendingIntent);
         notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
@@ -700,10 +730,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         if (player.isPlaying()) {
             playPause.setImageResource(R.drawable.player_pause_btn);
             playPauseState.setImageResource(R.drawable.ic_action_pause);
-
+            remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
+            smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
+            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         } else {
             playPause.setImageResource(R.drawable.player_play_btn);
             playPauseState.setImageResource(R.drawable.ic_action_play);
+            remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+            smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         }
     }
 
@@ -905,17 +940,16 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         currentSongArtistNameState.setText(getCurrentArtistName(songPositionFromList));
         currentSong.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistName.setText(getCurrentArtistName(songPositionFromList));
+        //notification update
+        smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+        smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+        remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+        remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+        notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        //albumart setup
         Bitmap bitmap = null;
         bitmap = getCurrentAlbumArt(mContext, songPositionFromList);
-        /*int width = this.getResources().getDisplayMetrics().widthPixels;
-        int height = (width*bitmap.getHeight())/bitmap.getWidth();
-        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);*/
         if (bitmap != null) {
-            /*int width = thumbnail.getWidth();
-            int height = thumbnail.getHeight();
-            if (width > 0 && height > 0)
-                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-            Log.i("scale", width + " " + height);*/
             thumbnail.setImageBitmap(bitmap);
             thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
         } else {
@@ -1021,7 +1055,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
                 } else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
                     /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-					findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
 					setActionBarStatus();*/
                     visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
                 }
@@ -1107,8 +1141,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
-							/*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-							findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);*/
+                            /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
+                            findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);*/
                             visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
                         }
                     }
@@ -1138,8 +1172,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     }
                 }, 400);
                 break;
-			/*case R.id.shuffle_all_songs: {
-				//Toast.makeText(this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
+            /*case R.id.shuffle_all_songs: {
+                //Toast.makeText(this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
 				if (songPositionFromList == -1) {
 					songPositionFromList = lastPlayedSong;
 					startPlay(getCurrentFile(songPositionFromList));
@@ -1223,8 +1257,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             }
             case R.id.showPlayerState: {
                 if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-					/*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
-					findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
+                    /*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
+                    findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
 					setActionBarStatus();*/
                     visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
                 }
@@ -1243,7 +1277,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         songPositionFromList = position;
         Log.i("Main playlist", "item selected" + songPositionFromList);
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-			/*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
+            /*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
 			findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
             visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
         }
