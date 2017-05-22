@@ -84,8 +84,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:maxLines="1"
                     android:gravity="left"
+                    android:maxLines="1"
                     android:text="Artist name"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/accent_material_dark"
@@ -97,6 +97,7 @@
                 android:id="@+id/noti_previous_song"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center|right"
                 android:background="@drawable/custom_ripple_effect"
                 app:srcCompat="@drawable/noti_prev_song" />
 
@@ -104,6 +105,7 @@
                 android:id="@+id/noti_play_pause"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center|right"
                 android:background="@drawable/custom_ripple_effect"
                 app:srcCompat="@drawable/noti_play_pause" />
 
@@ -111,6 +113,7 @@
                 android:id="@+id/noti_next_song"
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center|right"
                 android:background="@drawable/custom_ripple_effect"
                 app:srcCompat="@drawable/noti_next_song" />
 

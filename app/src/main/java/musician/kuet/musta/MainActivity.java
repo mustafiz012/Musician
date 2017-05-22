@@ -104,8 +104,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     //Notification
-    private NotificationCompat.Builder builder;
-    private NotificationManager notificationManager;
+    private NotificationCompat.Builder builder = null;
+    private NotificationManager notificationManager = null;
     private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
     private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
     private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
@@ -732,13 +732,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             playPauseState.setImageResource(R.drawable.ic_action_pause);
             remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
             smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
-            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            if (notificationManager != null && builder != null)
+                notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         } else {
             playPause.setImageResource(R.drawable.player_play_btn);
             playPauseState.setImageResource(R.drawable.ic_action_play);
             remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
             smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
-            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            if (notificationManager != null && builder != null)
+                notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         }
     }
 
@@ -945,7 +947,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
         remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
-        notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        if (notificationManager != null && builder != null)
+            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         //albumart setup
         Bitmap bitmap = null;
         bitmap = getCurrentAlbumArt(mContext, songPositionFromList);
