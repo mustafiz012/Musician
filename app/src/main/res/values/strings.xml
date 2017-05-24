@@ -22,4 +22,5 @@
         <item>Delete</item>
     </string-array>
     <string name="title_activity_current_playlist">Now playing</string>
+    <string name="title_activity_main">Musician</string>
 </resources>

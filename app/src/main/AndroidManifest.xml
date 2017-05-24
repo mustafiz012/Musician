@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="musician.kuet.musta">
+    package="musician.kuet.musta">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,33 +12,43 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".NowPlaying"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_now_playing"
-            android:launchMode="singleTop"
-            android:theme="@style/FullscreenTheme"/>
-        <activity
-            android:name=".Playing"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_playing"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".CurrentPlaylistActivity"
             android:label="@string/title_activity_current_playlist"
-            android:parentActivityName=".Playing"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="musician.kuet.musta.Playing"/>
+                android:value="musician.kuet.musta.MainActivity" />
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".FakeLauncherActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--<receiver android:name=".MainActivity$ButtonClickListenerEvent">
+            <intent-filter>
+                <action android:name="android.intent.action.CUSTOM_NOTIFICATION" />
+            </intent-filter>
+        </receiver>-->
     </application>
 
 </manifest>
