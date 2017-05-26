@@ -51,12 +51,11 @@
 
             <ImageButton
                 android:id="@+id/noti_icon"
-                android:layout_width="wrap_content"
+                android:layout_width="64dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:background="@drawable/custom_ripple_effect"
                 android:clickable="false"
-                app:srcCompat="@mipmap/ic_launcher" />
+                app:srcCompat="@drawable/default_albumart" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -64,6 +63,7 @@
                 android:layout_marginLeft="@dimen/text_margin"
                 android:layout_weight="1"
                 android:background="@drawable/custom_ripple_effect"
+                android:clickable="false"
                 android:orientation="vertical"
                 android:weightSum="3">
 

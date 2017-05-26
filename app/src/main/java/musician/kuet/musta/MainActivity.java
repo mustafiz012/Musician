@@ -74,7 +74,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     long totalDuration = 0;
     long currentPosition = 0;
     SeekBar bar;
-    ImageView preSong, nextSong, playPause, thumbnail, playPauseState;
+    ImageView preSong, nextSong, playPause, thumbnail, playPauseState, currentSongAlbumArtState;
     Button shuffle, repeat, nowPlayingSongs, goToSongList, allowPermission;
     TextView currentSong, currentSongState, currentSongArtistNameState, leftDuration, rightDuration, tvSongsSize,
             currentSongArtistName, current_playlist_action_bar_activity_content;
@@ -159,6 +159,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         initialization();
         //load player state from sharedPreferences
         loadPlayerStates();
+        setCurrentSongAlbumArtState(lastPlayedSong);
         currentSongState.setText(getCurrentFileName(lastPlayedSong));
         currentSongArtistNameState.setText(getCurrentArtistName(lastPlayedSong));
         //new MediaPlayer
@@ -184,6 +185,13 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         setupNotificationControl();
     }
 
+    //get bitmap from specific song for notification
+    private Bitmap getImageResource(ImageView currentSongAlbumArtState) {
+        Bitmap bitmap = ((BitmapDrawable) currentSongAlbumArtState.getDrawable()).getBitmap();
+        return bitmap;
+    }
+
+    //setting up notification media control
     private void setupNotificationControl() {
         //notification implementation
         mContext = this;
@@ -194,14 +202,14 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         smallRemoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
         smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
         smallRemoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
-        smallRemoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
+        smallRemoteViews.setImageViewBitmap(R.id.noti_icon, getImageResource(currentSongAlbumArtState));
         smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
         //bigger
         remoteViews.setImageViewResource(R.id.noti_previous_song, R.drawable.noti_prev_song);
         remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
         remoteViews.setImageViewResource(R.id.noti_next_song, R.drawable.noti_next_song);
-        remoteViews.setImageViewResource(R.id.noti_icon, R.mipmap.ic_launcher);
+        remoteViews.setImageViewBitmap(R.id.noti_icon, getImageResource(currentSongAlbumArtState));
         remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
 
@@ -774,6 +782,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         rightDuration = (TextView) findViewById(R.id.rightDuration);
         goToSongList = (Button) findViewById(R.id.songList);
         playPauseState = (ImageView) findViewById(R.id.playPauseState);
+        currentSongAlbumArtState = (ImageView) findViewById(R.id.currentSongAlbumArtState);
         shuffle = (Button) findViewById(R.id.shuffle);
         repeat = (Button) findViewById(R.id.repeat);
         nowPlayingSongs = (Button) findViewById(R.id.imageViewSongList);
@@ -935,16 +944,34 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         //Toast.makeText(this, "Player States restored", Toast.LENGTH_SHORT).show();
     }
 
+    private void setCurrentSongAlbumArtState(int currentPosition) {
+        //playerStateAlbumart setup
+        Bitmap bitmap;
+        bitmap = getCurrentAlbumArt(mContext, currentPosition);
+        if (bitmap != null) {
+            currentSongAlbumArtState.setImageBitmap(bitmap);
+            currentSongAlbumArtState.setScaleType(ImageView.ScaleType.FIT_XY);
+            currentSongAlbumArtState.setTag(bitmap);
+        } else {
+            currentSongAlbumArtState.setImageResource(R.drawable.default_albumart);
+            currentSongAlbumArtState.setScaleType(ImageView.ScaleType.FIT_XY);
+            currentSongAlbumArtState.setTag(R.drawable.default_albumart);
+        }
+    }
+
     private void setActionBarStatus() {
         if (songPositionFromList == -1)
             songPositionFromList = lastPlayedSong;
+        setCurrentSongAlbumArtState(songPositionFromList);
         currentSongState.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistNameState.setText(getCurrentArtistName(songPositionFromList));
         currentSong.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistName.setText(getCurrentArtistName(songPositionFromList));
         //notification update
+        smallRemoteViews.setImageViewBitmap(R.id.noti_icon, getImageResource(currentSongAlbumArtState));
         smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+        remoteViews.setImageViewBitmap(R.id.noti_icon, getImageResource(currentSongAlbumArtState));
         remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
         if (notificationManager != null && builder != null)
@@ -1281,7 +1308,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         Log.i("Main playlist", "item selected" + songPositionFromList);
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
             /*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-			findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
+            findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
             visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
         }
         startPlay(getCurrentFile(position));

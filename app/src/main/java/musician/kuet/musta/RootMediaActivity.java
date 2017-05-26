@@ -21,12 +21,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
 public class RootMediaActivity extends AppCompatActivity {
@@ -141,8 +143,8 @@ public class RootMediaActivity extends AppCompatActivity {
 
         public MediaCursorAdapter(Context context, int layout, Cursor c) {
             super(context, layout, c,
-                    new String[]{MediaStore.MediaColumns.TITLE, MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.AudioColumns.DURATION},
-                    new int[]{R.id.displayname, R.id.title, R.id.duration});
+                    new String[]{MediaStore.MediaColumns.TITLE, MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.AudioColumns.DURATION, MediaStore.Audio.Artists.Albums.ALBUM_ID},
+                    new int[]{R.id.displayname, R.id.title, R.id.duration, R.id.single_album_art});
         }
 
         @Override
@@ -150,7 +152,45 @@ public class RootMediaActivity extends AppCompatActivity {
             TextView title = (TextView) view.findViewById(R.id.title);
             TextView name = (TextView) view.findViewById(R.id.displayname);
             TextView duration = (TextView) view.findViewById(R.id.duration);
+            ImageView album_art = (ImageView) view.findViewById(R.id.single_album_art);
 
+            //albumart setup
+            Bitmap bitmap = null;
+            Long album_id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+            //Log.i("Album ID : ", "" + album_id);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            try {
+                final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+                //Log.i("Uriiii", "" + sArtworkUri.toString());
+                Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
+                Log.i("Uri", "" + uri.toString());
+                ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
+                Log.i("PDF", "" + pfd.toString());
+                if (pfd != null) {
+                    FileDescriptor fd = pfd.getFileDescriptor();
+                    bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
+                    pfd = null;
+                    fd = null;
+                }
+            } catch (Error ee) {
+                ee.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_albumart);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (bitmap != null) {
+                album_art.setImageBitmap(bitmap);
+                album_art.setScaleType(ImageView.ScaleType.FIT_XY);
+            } else {
+                album_art.setImageResource(R.drawable.default_albumart);
+                album_art.setScaleType(ImageView.ScaleType.FIT_XY);
+                //Toast.makeText(mContext, "No albumart found for this song", Toast.LENGTH_SHORT).show();
+            }
+
+            //next of albumart setup
             name.setText(cursor.getString(
                     cursor.getColumnIndex(MediaStore.MediaColumns.TITLE)));
 
