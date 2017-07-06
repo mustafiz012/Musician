@@ -122,7 +122,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_gravity="end"
+        android:layout_gravity="center|right"
         app:srcCompat="@drawable/ic_action_shuffle" />
 
     <android.support.design.widget.FloatingActionButton
