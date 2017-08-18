@@ -10,10 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -59,8 +56,16 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RootMediaActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener,
         AdapterView.OnItemClickListener {
+    private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
+    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
+    private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
+    private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
+    private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
     static boolean isPlugUnplugOccurred = false, shuffleFlag = false, isRepeatOneOn = false, isRepeatOn = false,
             isSeekBarChangedListenerStarted = false, isPhoneCallOccurred = false, isPlayerStartedFirstTimeYet = false;
+    public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
+    public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
+    public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
     //private static final String TAG = null;
     ListView songList, currentPlayList;
     Button playingSong, playlist_action_bar_back_btn, search_back_btn;
@@ -78,15 +83,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     Button shuffle, repeat, nowPlayingSongs, goToSongList, allowPermission;
     TextView currentSong, currentSongState, currentSongArtistNameState, leftDuration, rightDuration, tvSongsSize,
             currentSongArtistName, current_playlist_action_bar_activity_content;
-    private double startTime = 0;
-    private double finalTime = 0;
-    private Handler myHandler = new Handler();
     String currentItem = "";
     ArrayList<File> songs, songs2;
     int songsSize = 0;
     Random randomPosition = new Random();
-    //private MediaCursorAdapter mediaCursorAdapter = null;
-    private MediaPlayer player = null;
     ArrayAdapter<String> adapterForDialog;
     List<Integer> filteredIndexes;
     int filteredIndexPosition;
@@ -97,42 +97,113 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     Toolbar actionBar = null;
     LinearLayout showPlayerState = null;
     TelephonyManager telephonyManager = null;
-    private IntentFilter headsetUnpluggedIntentFilter = null, headsetPlugUnplugIntentFilter = null;
-    private String TAG = null;
-    private boolean isPermissionGranted = false;
-    private boolean isPermissionRequested = false;
-    private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
-    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
-    //Notification
-    private NotificationCompat.Builder builder = null;
-    private NotificationManager notificationManager = null;
-    private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
-    private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
-    private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
-    private RemoteViews remoteViews;
-    private RemoteViews smallRemoteViews;
-    private Context mContext;
     BroadcastReceiver broadcastReceiver;
-    public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
-    public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
-    public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
     Intent btn_noti_prev_song_btn_intent, btn_noti_play_pause_btn_intent, btn_noti_next_song_btn_intent;
     IntentFilter intentFilterPrevSong = null;
     IntentFilter intentFilterPlayPause = null;
     IntentFilter intentFilterNextSong = null;
+    //onBackPresses handling
+    boolean doubleBackToExitPressedOnce = false;
+    private double startTime = 0;
+    private double finalTime = 0;
+    private Handler myHandler = new Handler();
+    //private MediaCursorAdapter mediaCursorAdapter = null;
+    private MediaPlayer player = null;
+    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                //Incoming call: Pause music
+                Log.i("CALL_STATE_RINGING ", "called");
+                if (player.isPlaying()) {
+                    isPhoneCallOccurred = true;
+                    player.pause();
+                }
+            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                //Not in call: Play music
+                Log.i("CALL_STATE_IDLE ", "called");
+                if (player != null && !player.isPlaying() && isPhoneCallOccurred) {
+                    player.start();
+                    isPhoneCallOccurred = false;
+                }
+            } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                //A call is dialing, active or on hold
+                Log.i("CALL_STATE_OFFHOOK ", "called");
+                if (player.isPlaying()) {
+                    isPhoneCallOccurred = true;
+                    player.pause();
+                }
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+    private IntentFilter headsetUnpluggedIntentFilter = null, headsetPlugUnplugIntentFilter = null;
+    private String TAG = null;
+    private boolean isPermissionGranted = false;
+    private boolean isPermissionRequested = false;
+    //Notification
+    private NotificationCompat.Builder builder = null;
+    private NotificationManager notificationManager = null;
+    private RemoteViews remoteViews;
+    private RemoteViews smallRemoteViews;
+    private Context mContext;
+    private Runnable UpdateSongTimeT = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                startTime = player.getCurrentPosition();
+                leftDuration.setText(String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                        toMinutes((long) startTime)))
+                );
+                bar.setProgress((int) startTime);
+                myHandler.postDelayed(this, 100);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    private BroadcastReceiver mNoisyAudioReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
+                Log.i("Headset ","disconnected");
+            }else
+            */
+            if (intent.getAction().equals(AudioManager.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+                switch (state) {
+                    case 0: {
+                        Log.i("state", "Headset is unplugged");
+                        if (isPlugUnplugOccurred && player.isPlaying()) {
+                            setPlayPauseButtonClickListener();
+                            isPlugUnplugOccurred = false;
+                        }
+                        break;
+                    }
+                    case 1: {
+                        Log.i("state", "Headset is plugged");
+                        if (player != null && !isPlugUnplugOccurred) {
+                            isPlugUnplugOccurred = true;
+                            //setPlayPauseButtonClickListener();
+                        }
+                        break;
+                    }
+                    default:
+                        Log.i("state", "I dunno");
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Log.i("Android-Version", "Pre-Lollipop");
-            setContentView(R.layout.activity_main_pre_lollipop);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Log.i("Android-Version", "Post-Lollipop");
-            setContentView(R.layout.activity_main);
-        }
-
-
+        setContentView(R.layout.activity_main);
         TAG = getApplicationContext().getClass().getSimpleName().toString();
         allowPermission = (Button) findViewById(R.id.allow_permission);
         allowPermission.setOnClickListener(this);
@@ -165,23 +236,17 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
         previousSongPositions = new ArrayList<Integer>();
-        //fetching all audio files from external and internal sdCards
-        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            Log.i("if SDK", "" + android.os.Build.VERSION.SDK_INT);
-            if (checkingExternalStoragePermission()) {
-                alreadyFetchedAudioFiles();
-            } else {
-                MainActivity.this.finish();
-            }
-        } else {
-            Log.i("else SDK", "" + android.os.Build.VERSION.SDK_INT);
-            alreadyFetchedAudioFiles();
-        }*/
         alreadyFetchedAudioFiles();
         telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         headsetUnpluggedIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         headsetPlugUnplugIntentFilter = new IntentFilter(AudioManager.ACTION_HEADSET_PLUG);
-        setupNotificationControl();
+        if (isPostLollipop())
+            setupNotificationControl();
+        else Log.i("Android ", "" + Build.VERSION.SDK_INT);
+    }
+
+    private boolean isPostLollipop() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
 
     private void setupNotificationControl() {
@@ -333,37 +398,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
     }
 
-    PhoneStateListener phoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (state == TelephonyManager.CALL_STATE_RINGING) {
-                //Incoming call: Pause music
-                Log.i("CALL_STATE_RINGING ", "called");
-                if (player.isPlaying()) {
-                    isPhoneCallOccurred = true;
-                    player.pause();
-                }
-            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-                //Not in call: Play music
-                Log.i("CALL_STATE_IDLE ", "called");
-                if (player != null && !player.isPlaying() && isPhoneCallOccurred) {
-                    player.start();
-                    isPhoneCallOccurred = false;
-                }
-            } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                //A call is dialing, active or on hold
-                Log.i("CALL_STATE_OFFHOOK ", "called");
-                if (player.isPlaying()) {
-                    isPhoneCallOccurred = true;
-                    player.pause();
-                }
-            }
-            super.onCallStateChanged(state, incomingNumber);
-        }
-    };
-    //onBackPresses handling
-    boolean doubleBackToExitPressedOnce = false;
-
     @Override
     public void onBackPressed() {
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
@@ -390,7 +424,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         //super.onBackPressed();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -407,10 +440,12 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 registerReceiver(mNoisyAudioReceiver, headsetPlugUnplugIntentFilter);
             }
         }
-        Logging.getInstance().I(TAG, "onResumed");
-        registerReceiver(broadcastReceiver, intentFilterPrevSong);
-        registerReceiver(broadcastReceiver, intentFilterPlayPause);
-        registerReceiver(broadcastReceiver, intentFilterNextSong);
+        if (isPostLollipop()) {
+            Logging.getInstance().I(TAG, "onResumed");
+            registerReceiver(broadcastReceiver, intentFilterPrevSong);
+            registerReceiver(broadcastReceiver, intentFilterPlayPause);
+            registerReceiver(broadcastReceiver, intentFilterNextSong);
+        }
     }
 
     @Override
@@ -427,50 +462,25 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         savePlayerStates("repeatOn", isRepeatOn);
         savePlayerStates("repeatOneOn", isRepeatOneOn);
         savePlayerIntegerStates("lastPlayedSong", lastPlayedSong);
-        Logging.getInstance().I(TAG, "onStop");
-        Intent notificationIntent = new Intent(mContext, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-        PendingIntent pendingIntentSmall = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-        builder = new NotificationCompat.Builder(mContext);
-        builder.setCustomContentView(smallRemoteViews)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntentSmall);
 
-        builder.setAutoCancel(true)
-                .setCustomBigContentView(remoteViews)
-                .setContentIntent(pendingIntent);
-        notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        if (isPostLollipop()) {
+            Logging.getInstance().I(TAG, "onStop");
+            Intent notificationIntent = new Intent(mContext, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+            PendingIntent pendingIntentSmall = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+            builder = new NotificationCompat.Builder(mContext);
+            builder.setCustomContentView(smallRemoteViews)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntentSmall);
+
+            builder.setAutoCancel(true)
+                    .setCustomBigContentView(remoteViews)
+                    .setContentIntent(pendingIntent);
+            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         /*notificationManager.notify(CUSTOM_NOTI_PLAY_PAUSE_ID, builder.build());
         notificationManager.notify(CUSTOM_NOTI_NEXT_SONG_ID, builder.build());*/
-    }
-
-    public class ButtonClickListenerEvent extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            //notificationManager.cancel(intent.getExtras().getInt("prev_id"));
-            /*if (intent.getAction().equals(CUSTOM_NOTI)) {
-                Log.i("Notific", "Player not null");
-            } else {
-                Log.i("Notific", "Player null");
-            }*/
-            if (intent.getExtras().getInt("prev_id") == CUSTOM_NOTI_PREVIOUS_SONG_ID) {
-                Log.i("Notification", "Previous");
-                setPreviousSongButtonClickListener();
-            } else if (intent.getExtras().getInt("play_pause_id") == CUSTOM_NOTI_PLAY_PAUSE_ID) {
-                Log.i("Notification", "PlayPause");
-                if (player != null) {
-                    //Log.i("Notific", "Player not null");
-                    setPlayPauseButtonClickListener();
-                } else {
-                    Log.i("Notific", "Player null");
-                }
-            } else if (intent.getExtras().getInt("next_id") == CUSTOM_NOTI_NEXT_SONG_ID) {
-                Log.i("Notification", "Next");
-                setNextSongButtonClickListener();
-            }
         }
     }
 
@@ -499,6 +509,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         setActionBarStatus();
     }
 
+    //Parcelable state;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -512,8 +524,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             }
         }
     }
-
-    //Parcelable state;
 
     @Override
     protected void onDestroy() {
@@ -548,7 +558,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     setPlayerStates();
                 } else {
                     player.start();
-                    updateSongInfo(songPositionFromList);
+                    updateSongInfo();
                     setPlayerStates();
                 }
             } catch (IllegalArgumentException e) {
@@ -568,17 +578,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             } else {
                 songPositionFromList = (songPositionFromList + 1) % totalSongs;
             }
-                    /*uri = Uri.parse(mediaCursorAdapter.getCursor().getString(songPositionFromList));
-                    try {
-                        player.setDataSource(getApplicationContext(), uri);
-                        player.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //Log.i("songPositionFromList ", "" + songPositionFromList);
-                    player.start();
-                    updateSongInfo(songPositionFromList);
-                    playPause.setImageResource(R.drawable.btn_pause);*/
             if (songPositionFromList == -1) {
                 Log.i("Next button clicked", "no song selected " + lastPlayedSong);
                 startPlay(getCurrentFile(lastPlayedSong));
@@ -599,23 +598,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
     private void setPreviousSongButtonClickListener() {
         try {
-                    /*player.stop();
-                    player.reset();*/
-            //Log.i("Previous ", "" + songPositionFromList);
-                    /*if (songPositionFromList - 1 < 0) {
-                        if (shuffleFlag) {
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						} else {
-							songPositionFromList = totalSongs - 1;
-						}
-					} else {
-						if (shuffleFlag)
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						else
-							songPositionFromList--;
-					}
-
-					Log.i("PreviousFile ", songPositionFromList + "");*/
             Log.i("previous list size", "" + previousSongPositions.size());
             if (previousSongPositions.size() > 0) {
                 previousSongIndex--;
@@ -656,65 +638,11 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
     }
 
-    private BroadcastReceiver mNoisyAudioReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /*if(intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)){
-                Log.i("Headset ","disconnected");
-            }else
-            */
-            if (intent.getAction().equals(AudioManager.ACTION_HEADSET_PLUG)) {
-                int state = intent.getIntExtra("state", -1);
-                switch (state) {
-                    case 0: {
-                        Log.i("state", "Headset is unplugged");
-                        if (isPlugUnplugOccurred && player.isPlaying()) {
-                            setPlayPauseButtonClickListener();
-                            isPlugUnplugOccurred = false;
-                        }
-                        break;
-                    }
-                    case 1: {
-                        Log.i("state", "Headset is plugged");
-                        if (player != null && !isPlugUnplugOccurred) {
-                            isPlugUnplugOccurred = true;
-                            //setPlayPauseButtonClickListener();
-                        }
-                        break;
-                    }
-                    default:
-                        Log.i("state", "I dunno");
-                }
-            }
-        }
-    };
-
     public void customToast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
-    private Runnable UpdateSongTimeT = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                startTime = player.getCurrentPosition();
-                leftDuration.setText(String.format("%d:%d",
-                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-                                        toMinutes((long) startTime)))
-                );
-                bar.setProgress((int) startTime);
-                myHandler.postDelayed(this, 100);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    private void updateSongInfo(int currentPosition) {
+    private void updateSongInfo() {
         finalTime = player.getDuration();
         bar.setMax((int) finalTime);
         rightDuration.setText(String.format("%d:%d",
@@ -730,17 +658,21 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         if (player.isPlaying()) {
             playPause.setImageResource(R.drawable.player_pause_btn);
             playPauseState.setImageResource(R.drawable.ic_action_pause);
-            remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
-            smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
-            if (notificationManager != null && builder != null)
-                notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            if (remoteViews != null) {
+                remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
+                smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause_pausing);
+                if (notificationManager != null && builder != null)
+                    notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            }
         } else {
             playPause.setImageResource(R.drawable.player_play_btn);
             playPauseState.setImageResource(R.drawable.ic_action_play);
-            remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
-            smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
-            if (notificationManager != null && builder != null)
-                notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            if (remoteViews != null) {
+                remoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+                smallRemoteViews.setImageViewResource(R.id.noti_play_pause, R.drawable.noti_play_pause);
+                if (notificationManager != null && builder != null)
+                    notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+            }
         }
     }
 
@@ -942,13 +874,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         currentSongArtistNameState.setText(getCurrentArtistName(songPositionFromList));
         currentSong.setText(getCurrentFileName(songPositionFromList));
         currentSongArtistName.setText(getCurrentArtistName(songPositionFromList));
-        //notification update
-        smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
-        smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
-        remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
-        remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
-        if (notificationManager != null && builder != null)
-            notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        if (smallRemoteViews != null) {
+            //notification update
+            smallRemoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+            smallRemoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+            remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
+            remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
+            if (notificationManager != null && builder != null)
+                notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
+        }
         //albumart setup
         Bitmap bitmap = null;
         bitmap = getCurrentAlbumArt(mContext, songPositionFromList);
@@ -1018,7 +952,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             previousSongIndex++;
         }
         setActionBarStatus();
-        updateSongInfo(songPositionFromList);
+        updateSongInfo();
         setPlayerStates();
         setSeekBarChangedListener();
     }
@@ -1065,34 +999,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 break;
             }
             case R.id.playPause: {
-                /*
-                Log.e("Play position", "" + songPositionFromList);
-                if (songPositionFromList == -1) {
-                    songPositionFromList = lastPlayedSong;
-                    Log.i("Play button clicked", " no list item" + songPositionFromList);
-                    startPlay(getCurrentFile(songPositionFromList));
-                    if (seekBarUpdating != null && !seekBarUpdating.isAlive())
-                        setSeekBarUpdating();
-                    Log.i("seekbarchanged+-", "" + isSeekBarChangedListenerStarted);
-                    //setSeekBarChangedListener();
-                } else {
-                    try {
-                        if (player.isPlaying()) {
-                            Log.i("position here if", "" + songPositionFromList);
-                            player.pause();
-                            setPlayerStates();
-                        } else {
-                            Log.i("position here", "" + songPositionFromList);
-                            player.start();
-                            updateSongInfo(songPositionFromList);
-                            setPlayerStates();
-                        }
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    }
-                }*/
                 setPlayPauseButtonClickListener();
                 break;
             }
@@ -1281,10 +1187,38 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         Log.i("Main playlist", "item selected" + songPositionFromList);
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
             /*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-			findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
+            findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
             visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
         }
         startPlay(getCurrentFile(position));
         //updateSongInfoFromDialog(position);
+    }
+
+    public class ButtonClickListenerEvent extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            //notificationManager.cancel(intent.getExtras().getInt("prev_id"));
+            /*if (intent.getAction().equals(CUSTOM_NOTI)) {
+                Log.i("Notific", "Player not null");
+            } else {
+                Log.i("Notific", "Player null");
+            }*/
+            if (intent.getExtras().getInt("prev_id") == CUSTOM_NOTI_PREVIOUS_SONG_ID) {
+                Log.i("Notification", "Previous");
+                setPreviousSongButtonClickListener();
+            } else if (intent.getExtras().getInt("play_pause_id") == CUSTOM_NOTI_PLAY_PAUSE_ID) {
+                Log.i("Notification", "PlayPause");
+                if (player != null) {
+                    //Log.i("Notific", "Player not null");
+                    setPlayPauseButtonClickListener();
+                } else {
+                    Log.i("Notific", "Player null");
+                }
+            } else if (intent.getExtras().getInt("next_id") == CUSTOM_NOTI_NEXT_SONG_ID) {
+                Log.i("Notification", "Next");
+                setNextSongButtonClickListener();
+            }
+        }
     }
 }

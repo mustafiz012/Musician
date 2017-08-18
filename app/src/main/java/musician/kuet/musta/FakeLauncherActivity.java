@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,10 +16,10 @@ import android.widget.TextView;
 
 public class FakeLauncherActivity extends Activity {
 
-    private boolean isPermissionGranted = false;
-    private boolean isPermissionRequested = false;
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
+    private boolean isPermissionGranted = false;
+    private boolean isPermissionRequested = false;
     private Button allow_permission_fake = null;
     private int splashDuration = 1000;
     private TextView home_screen_app_name = null;

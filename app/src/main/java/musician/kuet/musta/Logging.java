@@ -7,15 +7,16 @@ import android.util.Log;
  */
 
 public class Logging {
-	private static final Logging ourInstance = new Logging();
+    private static final Logging ourInstance = new Logging();
 
-	public static Logging getInstance() {
-		return ourInstance;
-	}
+    private Logging() {
+    }
 
-	private Logging() {
-	}
-	public void I(String classes, String s){
-		Log.i(classes+" ", ""+s);
-	}
+    public static Logging getInstance() {
+        return ourInstance;
+    }
+
+    public void I(String classes, String s) {
+        Log.i(classes + " ", "" + s);
+    }
 }
