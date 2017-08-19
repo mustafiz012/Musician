@@ -126,6 +126,53 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/repeat"
+                        style="@style/ButtonRippleStyleWhite"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/player_repeat_off_btn" />
+
+                    <Space
+                        android:layout_width="@dimen/activity_horizontal_margin"
+                        android:layout_height="56dp" />
+
+                    <Button
+                        android:id="@+id/shuffle"
+                        style="@style/ButtonRippleStyleWhite"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/player_shuffle_off_btn" />
+
+
+
+                    <Space
+                        android:layout_width="@dimen/activity_horizontal_margin"
+                        android:layout_height="56dp" />
+
+                    <com.rey.material.widget.Button
+                        android:id="@+id/add_favorite_btn"
+                        style="@style/ButtonRippleStyleWhite"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/favorite_song_unselected"
+                        app:rd_enable="true" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/black_overlay" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
                     android:gravity="center"
@@ -219,19 +266,6 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/repeat"
-                        style="@style/ButtonRippleStyleWhite"
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/player_repeat_off_btn" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/black_overlay" />
-
                     <SeekBar
                         android:id="@+id/seekBar"
                         android:layout_width="wrap_content"
@@ -243,19 +277,6 @@
                         android:layout_weight="1"
                         android:indeterminate="false" />
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/black_overlay" />
-
-                    <Button
-                        android:id="@+id/shuffle"
-                        style="@style/ButtonRippleStyleWhite"
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/player_shuffle_off_btn" />
                 </LinearLayout>
 
                 <View

@@ -134,21 +134,23 @@ public class RootMediaActivity extends AppCompatActivity {
         }
         //rootSongList.setAdapter(rootMediaCursorAdapter);
     }
-
+    public MediaCursorAdapter setMediaCursorAdapter(){
+        return rootMediaCursorAdapter;
+    }
     //creating a media cursor adapter which will be publicly accessible
     public class MediaCursorAdapter extends SimpleCursorAdapter {
 
         public MediaCursorAdapter(Context context, int layout, Cursor c) {
             super(context, layout, c,
                     new String[]{MediaStore.MediaColumns.TITLE, MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.AudioColumns.DURATION},
-                    new int[]{R.id.displayname, R.id.title, R.id.duration});
+                    new int[]{R.id.track_title, R.id.artist_name, R.id.duration});
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            TextView title = (TextView) view.findViewById(R.id.title);
-            TextView name = (TextView) view.findViewById(R.id.displayname);
-            TextView duration = (TextView) view.findViewById(R.id.duration);
+            TextView title = view.findViewById(R.id.artist_name);
+            TextView name = view.findViewById(R.id.track_title);
+            TextView duration = view.findViewById(R.id.duration);
 
             name.setText(cursor.getString(
                     cursor.getColumnIndex(MediaStore.MediaColumns.TITLE)));

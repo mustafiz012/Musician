@@ -9,6 +9,88 @@
     tools:context="musician.kuet.musta.MainActivity">
 
     <LinearLayout
+        android:id="@+id/actionbar_layout_now_playing"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@layout/bg_player_footer"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.rey.material.widget.Button
+            android:id="@+id/songList"
+            style="@style/ButtonRippleStyleWhite"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/actionbar_back_btn_white"
+            app:rd_enable="true" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currentSong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/songList"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/songList"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Nothing..."
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/accent_material_dark"
+                android:textSize="20dip" />
+
+            <TextView
+                android:id="@+id/currentSongArtistName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="------"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#cfcfff"
+                android:textSize="13dip" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black_overlay" />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/imageViewSongList"
+            style="@style/ButtonRippleStyleWhite"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/currentSong"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/btn_playlist"
+            app:rd_enable="true" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_overlay"
+        android:visibility="gone" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -38,6 +120,62 @@
             android:background="@layout/bg_player_footer"
             android:gravity="center"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.rey.material.widget.Button
+                    android:id="@+id/repeat"
+                    style="@style/ButtonRippleStyleWhite"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/player_repeat_off_btn"
+                    app:rd_enable="true" />
+
+                <Space
+                    android:layout_width="@dimen/activity_horizontal_margin"
+                    android:layout_height="56dp" />
+
+                <com.rey.material.widget.Button
+                    android:id="@+id/shuffle"
+                    style="@style/ButtonRippleStyleWhite"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/player_shuffle_off_btn"
+                    app:rd_enable="true" />
+
+                <Space
+                    android:layout_width="@dimen/activity_horizontal_margin"
+                    android:layout_height="56dp" />
+
+                <com.rey.material.widget.Button
+                    android:id="@+id/add_favorite_btn"
+                    style="@style/ButtonRippleStyleWhite"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/favorite_song_unselected"
+                    app:rd_enable="true" />
+
+                <Space
+                    android:layout_width="@dimen/activity_horizontal_margin"
+                    android:layout_height="56dp" />
+
+                <com.rey.material.widget.Button
+                    android:id="@+id/favorite_list_btn"
+                    style="@style/ButtonRippleStyleWhite"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_playlist"
+                    app:rd_enable="true" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/black_overlay" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,20 +274,6 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.rey.material.widget.Button
-                    android:id="@+id/repeat"
-                    style="@style/ButtonRippleStyleWhite"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/player_repeat_off_btn"
-                    app:rd_enable="true" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/black_overlay" />
-
                 <SeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="wrap_content"
@@ -160,22 +284,8 @@
                     android:layout_toRightOf="@+id/repeat"
                     android:layout_weight="1"
                     android:indeterminate="false"
+                    android:secondaryProgress="100"
                     android:thumb="@drawable/seek_bar_thumb" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/black_overlay" />
-
-                <com.rey.material.widget.Button
-                    android:id="@+id/shuffle"
-                    style="@style/ButtonRippleStyleWhite"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/player_shuffle_off_btn"
-                    app:rd_enable="true" />
             </LinearLayout>
 
             <View

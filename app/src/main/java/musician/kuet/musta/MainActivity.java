@@ -56,18 +56,22 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RootMediaActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener,
         AdapterView.OnItemClickListener {
+
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
     private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
     private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
+    private static final int FAVORITE_PLAYLIST_REQUEST_CODE = 201;
+    private static final int ALL_SONGS_PLAYLIST_REQUEST_CODE = 200;
     static boolean isPlugUnplugOccurred = false, shuffleFlag = false, isRepeatOneOn = false, isRepeatOn = false,
             isSeekBarChangedListenerStarted = false, isPhoneCallOccurred = false, isPlayerStartedFirstTimeYet = false;
+    private boolean isSongFavoriteListed = false;
     public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
     public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
     public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
     //private static final String TAG = null;
-    ListView songList, currentPlayList;
+    ListView songList, currentPlayList, lv_favorite_song_list;
     Button playingSong, playlist_action_bar_back_btn, search_back_btn;
     SearchView searchView;
     FrameLayout playlist_action_bar_search_btn;
@@ -80,7 +84,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     long currentPosition = 0;
     SeekBar bar;
     ImageView preSong, nextSong, playPause, thumbnail, playPauseState;
-    Button shuffle, repeat, nowPlayingSongs, goToSongList, allowPermission;
+    Button shuffle, repeat, nowPlayingSongs, goToSongList, allowPermission, add_favorite_btn, favorite_list_btn;
     TextView currentSong, currentSongState, currentSongArtistNameState, leftDuration, rightDuration, tvSongsSize,
             currentSongArtistName, current_playlist_action_bar_activity_content;
     String currentItem = "";
@@ -390,9 +394,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             case R.id.main_action_current_playlist: {
                 Intent intent = new Intent(MainActivity.this, CurrentPlaylistActivity.class);
                 intent.putExtra("currentPosition", songPositionFromList);
-                startActivityForResult(intent, 200);
+                startActivityForResult(intent, ALL_SONGS_PLAYLIST_REQUEST_CODE);
                 return true;
             }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -515,12 +520,22 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case (200): {
+            case (ALL_SONGS_PLAYLIST_REQUEST_CODE): {
                 if (resultCode == Activity.RESULT_OK) {
                     songPositionFromList = data.getIntExtra("resultantPosition", -1);
                     Log.i("CurrentPlaylist", "onActivityResult Clicked" + songPositionFromList);
                     startPlay(getCurrentFile(songPositionFromList));
                 }
+                break;
+            }
+            case FAVORITE_PLAYLIST_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_OK) {
+                    songPositionFromList = data.getIntExtra("resultantPosition", -1);
+                    Toast.makeText(getApplicationContext(), "" + getCurrentFileName(songPositionFromList), Toast.LENGTH_SHORT).show();
+                    //Log.i("PlayListActivity", "onActivityResult Clicked" + songPositionFromList);
+                    startPlay(getCurrentFile(songPositionFromList));
+                }
+                break;
             }
         }
     }
@@ -688,6 +703,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         floatingActionButton.setOnClickListener(this);*/
         tvSongsSize = (TextView) findViewById(R.id.songsSize);
         songList = (ListView) findViewById(android.R.id.list);
+        lv_favorite_song_list = (ListView) findViewById(R.id.lv_favorite_song_list);
         currentPlayList = (ListView) findViewById(R.id.lv_current_playlist);
         //registerForContextMenu(songList);
         bar = (SeekBar) findViewById(R.id.seekBar);
@@ -708,7 +724,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         playPauseState = (ImageView) findViewById(R.id.playPauseState);
         shuffle = (Button) findViewById(R.id.shuffle);
         repeat = (Button) findViewById(R.id.repeat);
+        add_favorite_btn = (Button) findViewById(R.id.add_favorite_btn);
         nowPlayingSongs = (Button) findViewById(R.id.imageViewSongList);
+        favorite_list_btn = (Button) findViewById(R.id.favorite_list_btn);
 
         preSong.setOnClickListener(this);
         nextSong.setOnClickListener(this);
@@ -719,7 +737,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         playPauseState.setOnClickListener(this);
         shuffle.setOnClickListener(this);
         repeat.setOnClickListener(this);
+        add_favorite_btn.setOnClickListener(this);
         playingSong.setOnClickListener(this);
+        favorite_list_btn.setOnClickListener(this);
 //		playlist_action_bar_search_btn.setOnClickListener(this);
 //		search_back_btn.setOnClickListener(this);
 //		playlist_action_bar_back_btn.setOnClickListener(this);
@@ -1003,6 +1023,17 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 break;
             }
 
+            case R.id.favorite_list_btn: {
+                Toast.makeText(getApplicationContext(), "Fav clicked", Toast.LENGTH_SHORT).show();
+                //findViewById(R.id.home_page_favorite_song_list_layout).setVisibility(View.VISIBLE);
+
+                Intent favIntent = new Intent(getApplicationContext(), PlaylistActivity.class);
+                favIntent.putIntegerArrayListExtra("favlist", (ArrayList<Integer>) previousSongPositions);
+                startActivityForResult(favIntent, FAVORITE_PLAYLIST_REQUEST_CODE);
+                //startActivity(favIntent);
+                break;
+            }
+
             //repeating functionality
             case R.id.repeat: {
                 if (!isRepeatOn && !isRepeatOneOn) {
@@ -1037,11 +1068,23 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 }
                 break;
             }
+
+            case R.id.add_favorite_btn: {
+                if (isSongFavoriteListed) {
+                    add_favorite_btn.setBackgroundResource(R.drawable.favorite_song_unselected);
+                    isSongFavoriteListed = false;
+                } else {
+                    add_favorite_btn.setBackgroundResource(R.drawable.favorite_song_selected);
+                    isSongFavoriteListed = true;
+                }
+                break;
+            }
+
             //show songList
             case R.id.imageViewSongList: {
                 //song list in a new activity
                 Intent intent = new Intent(this, CurrentPlaylistActivity.class);
-                startActivityForResult(intent, 200);
+                startActivityForResult(intent, ALL_SONGS_PLAYLIST_REQUEST_CODE);
                 break;
             }
             //back to songList from player

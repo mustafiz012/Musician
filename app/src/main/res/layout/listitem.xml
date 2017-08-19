@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/dim_foreground_disabled_material_dark"
-
     android:orientation="vertical"
     android:paddingBottom="2dp"
     android:paddingTop="2dp">
 
     <TextView
-        android:id="@+id/displayname"
+        android:id="@+id/track_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -24,7 +23,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/artist_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
@@ -43,11 +42,4 @@
             android:textColor="#cc000000"
             android:textSize="15dip" />
     </LinearLayout>
-
-    <!--<View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/secondary_text_default_material_dark" />-->
-
-
 </LinearLayout>

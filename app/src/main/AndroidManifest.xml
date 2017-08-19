@@ -26,13 +26,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".FakeLauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -43,12 +37,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--<receiver android:name=".MainActivity$ButtonClickListenerEvent">
-            <intent-filter>
-                <action android:name="android.intent.action.CUSTOM_NOTIFICATION" />
-            </intent-filter>
-        </receiver>-->
+        <activity
+            android:name=".PlaylistActivity"
+            android:label="@string/activity_favorite_track_list">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="musician.kuet.musta.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
