@@ -18,5 +18,5 @@
     <item
         android:id="@+id/main_action_favorite_playlist"
         android:orderInCategory="100"
-        android:title="Favorite" />
+        android:title="@string/favorite" />
 </menu>

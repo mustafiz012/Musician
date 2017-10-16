@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +24,12 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.appthemeengine.ATEActivity;
+
 import java.io.FileDescriptor;
 import java.math.BigDecimal;
 
-public class RootMediaActivity extends AppCompatActivity {
+public class RootMediaActivity extends ATEActivity {
 
     private final static int READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 201;
     private final static int WRITE_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 202;
@@ -104,8 +105,6 @@ public class RootMediaActivity extends AppCompatActivity {
             if (pfd != null) {
                 FileDescriptor fd = pfd.getFileDescriptor();
                 bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
-                pfd = null;
-                fd = null;
             }
         } catch (Error ee) {
             ee.printStackTrace();

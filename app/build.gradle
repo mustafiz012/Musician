@@ -34,6 +34,9 @@ android {
         compile 'com.android.support:appcompat-v7:26.+'
         compile 'com.android.support:support-v4:26.+'
         compile 'com.github.rey5137:material:1.2.4'
+        compile('com.github.garretyoder:app-theme-engine:1.5@aar') {
+            transitive = true
+        }
     }
 }
 dependencies {

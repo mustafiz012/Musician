@@ -123,6 +123,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center|right"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_action_shuffle" />
 
 </android.support.design.widget.CoordinatorLayout>

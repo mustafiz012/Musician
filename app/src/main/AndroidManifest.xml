@@ -26,7 +26,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FakeLauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -44,6 +44,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="musician.kuet.musta.MainActivity" />
         </activity>
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -23,4 +23,6 @@
     </string-array>
     <string name="title_activity_current_playlist">Now playing</string>
     <string name="title_activity_main">Musician</string>
+    <string name="favorite">Favorite</string>
+    <string name="search">Search</string>
 </resources>

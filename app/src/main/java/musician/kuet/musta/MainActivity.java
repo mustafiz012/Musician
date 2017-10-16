@@ -66,7 +66,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     private static final int ALL_SONGS_PLAYLIST_REQUEST_CODE = 200;
     static boolean isPlugUnplugOccurred = false, shuffleFlag = false, isRepeatOneOn = false, isRepeatOn = false,
             isSeekBarChangedListenerStarted = false, isPhoneCallOccurred = false, isPlayerStartedFirstTimeYet = false;
-    private boolean isSongFavoriteListed = false;
     public String CUSTOM_NOTI_PREVIOUS_SONG = "android.intent.action.CUSTOM_NOTI_PREVIOUS_SONG";
     public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
     public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
@@ -108,6 +107,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     IntentFilter intentFilterNextSong = null;
     //onBackPresses handling
     boolean doubleBackToExitPressedOnce = false;
+    private boolean isSongFavoriteListed = false;
     private double startTime = 0;
     private double finalTime = 0;
     private Handler myHandler = new Handler();
@@ -389,6 +389,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 return true;
             }
             case R.id.main_action_search: {
+
                 return true;
             }
             case R.id.main_action_current_playlist: {
@@ -730,8 +731,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
         preSong.setOnClickListener(this);
         nextSong.setOnClickListener(this);
-//		leftSeek.setOnClickListener(this);
-//		rightSeek.setOnClickListener(this);
         playPause.setOnClickListener(this);
         goToSongList.setOnClickListener(this);
         playPauseState.setOnClickListener(this);
@@ -740,10 +739,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         add_favorite_btn.setOnClickListener(this);
         playingSong.setOnClickListener(this);
         favorite_list_btn.setOnClickListener(this);
-//		playlist_action_bar_search_btn.setOnClickListener(this);
+/*//		playlist_action_bar_search_btn.setOnClickListener(this);
 //		search_back_btn.setOnClickListener(this);
 //		playlist_action_bar_back_btn.setOnClickListener(this);
-        //player.setOnCompletionListener(this);
+        //player.setOnCompletionListener(this);*/
         nowPlayingSongs.setOnClickListener(this);
         homeFab = (FloatingActionButton) findViewById(R.id.fab_main);
         homeFab.setOnClickListener(this);

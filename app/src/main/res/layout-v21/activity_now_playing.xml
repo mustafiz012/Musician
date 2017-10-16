@@ -153,7 +153,6 @@
                         android:background="@drawable/player_shuffle_off_btn" />
 
 
-
                     <Space
                         android:layout_width="@dimen/activity_horizontal_margin"
                         android:layout_height="56dp" />
@@ -165,6 +164,17 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/favorite_song_unselected"
                         app:rd_enable="true" />
+
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="16dp" />
+
+                    <Button
+                        android:id="@+id/favorite_list_btn"
+                        style="@style/ButtonRippleStyleWhite"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/btn_playlist" />
                 </LinearLayout>
 
                 <View

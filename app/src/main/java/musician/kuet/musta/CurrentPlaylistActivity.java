@@ -24,7 +24,7 @@ public class CurrentPlaylistActivity extends RootMediaActivity implements Adapte
     ListView nowPlayingList = null;
     List<Integer> nowPlayingFilteredIndexes;
     int nowPlayingFilteredIndexPosition = 0;
-    MenuItem searchItem = null, menuPlaylistItem = null;
+    MenuItem searchItem = null, searchGlobalMusics = null, menuPlaylistItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,14 @@ public class CurrentPlaylistActivity extends RootMediaActivity implements Adapte
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_current_playlist, menu);
         searchItem = menu.findItem(R.id.action_search);
+        searchGlobalMusics = menu.findItem(R.id.action_search_global);
+        searchGlobalMusics.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(CurrentPlaylistActivity.this, SearchActivity.class));
+                return false;
+            }
+        });
         menuPlaylistItem = menu.findItem(R.id.action_current_playlist);
         menuPlaylistItem.setVisible(false);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -98,6 +106,12 @@ public class CurrentPlaylistActivity extends RootMediaActivity implements Adapte
             case android.R.id.home: {
                 Log.i("Child home ", "is clicked");
                 return false;
+            }
+
+            case R.id.action_search_global: {
+                Intent searchIntent = new Intent(CurrentPlaylistActivity.this, SearchActivity.class);
+                startActivity(searchIntent);
+                return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
