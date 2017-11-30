@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -33,15 +32,15 @@ import java.math.BigDecimal;
 
 public class RootMediaActivity extends AppCompatActivity {
 
+    private final static int READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 201;
+    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 202;
     public MediaCursorAdapter rootMediaCursorAdapter = null;
-    ListView rootSongList = null;
     public Cursor gCursor = null;
     public int rootTotalSongs = 0;
     public ActionBar gActionBar = null;
+    ListView rootSongList = null;
     private boolean isRootPermissionGranted = false;
     private boolean isRootPermissionRequested = false;
-    private final static int READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 201;
-    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 202;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +148,10 @@ public class RootMediaActivity extends AppCompatActivity {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            TextView title = (TextView) view.findViewById(R.id.title);
-            TextView name = (TextView) view.findViewById(R.id.displayname);
-            TextView duration = (TextView) view.findViewById(R.id.duration);
-            ImageView album_art = (ImageView) view.findViewById(R.id.single_album_art);
+            TextView title = view.findViewById(R.id.title);
+            TextView name = view.findViewById(R.id.displayname);
+            TextView duration = view.findViewById(R.id.duration);
+            ImageView album_art = view.findViewById(R.id.single_album_art);
 
             //albumart setup
             Bitmap bitmap = null;

@@ -19,12 +19,12 @@
 
         <com.rey.material.widget.Button
             android:id="@+id/songList"
-            app:rd_enable="true"
             style="@style/ButtonRippleStyleWhite"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:background="@drawable/actionbar_back_btn_white"/>
+            android:background="@drawable/actionbar_back_btn_white"
+            app:rd_enable="true" />
 
         <View
             android:layout_width="2dp"
@@ -86,10 +86,10 @@
     </LinearLayout>
 
     <View
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/black_overlay" />
+        android:background="@color/black_overlay"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"

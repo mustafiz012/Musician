@@ -9,13 +9,14 @@ import android.util.Log;
 public class Logging {
 	private static final Logging ourInstance = new Logging();
 
+	private Logging() {
+	}
+
 	public static Logging getInstance() {
 		return ourInstance;
 	}
 
-	private Logging() {
-	}
-	public void I(String classes, String s){
-		Log.i(classes+" ", ""+s);
+	public void I(String classes, String s) {
+		Log.i(classes + " ", "" + s);
 	}
 }
