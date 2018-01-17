@@ -81,14 +81,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/songList"
                     android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/songList"
+                    android:layout_toEndOf="@+id/songList"
                     android:layout_weight="5"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="Nothing..."
+                    android:text="@string/nothing"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/accent_material_dark"
-                    android:textSize="20dip" />
+                    android:textColor="@color/accentMaterialDark"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/currentSongArtistNameState"
@@ -114,24 +114,5 @@
                 app:rd_enable="true" />
         </LinearLayout>
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="end"
-        app:srcCompat="@drawable/ic_action_shuffle" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>

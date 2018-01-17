@@ -30,4 +30,9 @@
     <string name="notification">Notification</string>
     <string name="artist_name">Artist name</string>
     <string name="song_name">Song name</string>
+    <string name="nothing">Nothing...</string>
+    <string name="allow">Allow</string>
+    <string name="none">None</string>
+    <string name="playlist">Playlist</string>
+    <string name="allow_permission">Allow Permission</string>
 </resources>

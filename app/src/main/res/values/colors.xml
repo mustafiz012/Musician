@@ -14,7 +14,9 @@
     <color name="primary_dark">#e09721</color>
     <color name="font_color_action_bar_title">#E6252525</color>
 
-    <!--from samu-->
+    <!--above v21-->
+    <color name="ripple_dark">#1dffffff</color>
+    <color name="ripple_light">#1d000000</color>
 
     <!-- opacity reference -->
     <color name="color_000000_op100">#ff000000</color>

@@ -20,11 +20,9 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -38,7 +36,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,17 +45,17 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RootMediaActivity implements View.OnClickListener, MediaPlayer.OnCompletionListener,
         AdapterView.OnItemClickListener {
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
-    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     private static final int CUSTOM_NOTI_PREVIOUS_SONG_ID = 203;
     private static final int CUSTOM_NOTI_PLAY_PAUSE_ID = 204;
     private static final int CUSTOM_NOTI_NEXT_SONG_ID = 205;
@@ -68,49 +65,42 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     public String CUSTOM_NOTI_PLAY_PAUSE = "android.intent.action.CUSTOM_NOTI_PLAY_PAUSE";
     public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
     //private static final String TAG = null;
-    ListView songList, currentPlayList;
-    Button playingSong, playlist_action_bar_back_btn, search_back_btn;
-    SearchView searchView;
-    FrameLayout playlist_action_bar_search_btn;
-    EditText search_song_et;
-    int songPositionFromList = -1, totalSongs = 0, previousSongIndex = 0, lastPlayedSong = 0;
-    List<Integer> previousSongPositions;
-    String currentFile;
-    Thread seekBarUpdating;
-    long totalDuration = 0;
-    long currentPosition = 0;
-    SeekBar bar;
-    ImageView preSong, nextSong, playPause, thumbnail, playPauseState, currentSongAlbumArtState;
-    Button shuffle, repeat, nowPlayingSongs, goToSongList, allowPermission;
-    TextView currentSong, currentSongState, currentSongArtistNameState, leftDuration, rightDuration, tvSongsSize,
-            currentSongArtistName, current_playlist_action_bar_activity_content;
-    String currentItem = "";
-    ArrayList<File> songs, songs2;
-    int songsSize = 0;
-    Random randomPosition = new Random();
-    ArrayAdapter<String> adapterForDialog;
-    List<Integer> filteredIndexes;
-    int filteredIndexPosition;
-    //Cursor gCursor = null;
-    MenuItem menuSearchItem = null, menuPlaylistItem = null;
-    FloatingActionButton homeFab = null;
-    //private ActionBar actionBar = null;
-    Toolbar actionBar = null;
-    LinearLayout showPlayerState = null;
-    TelephonyManager telephonyManager = null;
-    BroadcastReceiver broadcastReceiver;
-    Intent btn_noti_prev_song_btn_intent, btn_noti_play_pause_btn_intent, btn_noti_next_song_btn_intent;
-    IntentFilter intentFilterPrevSong = null;
-    IntentFilter intentFilterPlayPause = null;
-    IntentFilter intentFilterNextSong = null;
+    private ListView songList;
+    private EditText search_song_et;
+    private int songPositionFromList = -1, totalSongs = 0, previousSongIndex = 0, lastPlayedSong = 0;
+    private List<Integer> previousSongPositions;
+    private Thread seekBarUpdating;
+    private long totalDuration = 0;
+    private long currentPosition = 0;
+    private SeekBar bar;
+    private ImageView playPause;
+    private ImageView thumbnail;
+    private ImageView playPauseState;
+    private ImageView currentSongAlbumArtState;
+    private Button shuffle;
+    private Button repeat;
+    private TextView currentSong;
+    private TextView currentSongState;
+    private TextView currentSongArtistNameState;
+    private TextView leftDuration;
+    private TextView rightDuration;
+    private TextView tvSongsSize;
+    private TextView currentSongArtistName;
+    private Random randomPosition = new Random();
+    private List<Integer> filteredIndexes;
+    private MenuItem menuSearchItem = null, menuPlaylistItem = null;
+    private Toolbar actionBar = null;
+    private TelephonyManager telephonyManager = null;
+    private BroadcastReceiver broadcastReceiver;
+    private IntentFilter intentFilterPrevSong = null;
+    private IntentFilter intentFilterPlayPause = null;
+    private IntentFilter intentFilterNextSong = null;
     //onBackPresses handling
-    boolean doubleBackToExitPressedOnce = false;
+    private boolean doubleBackToExitPressedOnce = false;
     private double startTime = 0;
-    private double finalTime = 0;
     private Handler myHandler = new Handler();
-    //private MediaCursorAdapter mediaCursorAdapter = null;
     private MediaPlayer player = null;
-    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+    private PhoneStateListener phoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
@@ -138,7 +128,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             super.onCallStateChanged(state, incomingNumber);
         }
     };
-    private IntentFilter headsetUnpluggedIntentFilter = null, headsetPlugUnplugIntentFilter = null;
+    private IntentFilter headsetPlugUnplugIntentFilter = null;
     private String TAG = null;
     private boolean isPermissionGranted = false;
     private boolean isPermissionRequested = false;
@@ -153,7 +143,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         public void run() {
             try {
                 startTime = player.getCurrentPosition();
-                leftDuration.setText(String.format("%d:%d",
+                leftDuration.setText(String.format(Locale.getDefault(), "%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
@@ -161,9 +151,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 );
                 bar.setProgress((int) startTime);
                 myHandler.postDelayed(this, 100);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalStateException | IllegalArgumentException e) {
                 e.printStackTrace();
             }
         }
@@ -175,7 +163,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 Log.i("Headset ","disconnected");
             }else
             */
-            if (intent.getAction().equals(AudioManager.ACTION_HEADSET_PLUG)) {
+            if (Objects.equals(intent.getAction(), AudioManager.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
                 switch (state) {
                     case 0: {
@@ -204,17 +192,11 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Log.i("Android-Version", "Pre-Lollipop");
-            setContentView(R.layout.activity_main_pre_lollipop);
-        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Log.i("Android-Version", "Post-Lollipop");
             setContentView(R.layout.activity_main);
         }
-
-
-        TAG = getApplicationContext().getClass().getSimpleName().toString();
-        allowPermission = (Button) findViewById(R.id.allow_permission);
+        Button allowPermission = findViewById(R.id.allow_permission);
         allowPermission.setOnClickListener(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
@@ -222,7 +204,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         } else {
             isPermissionGranted = true;
         }
-
         if (isPermissionGranted && !isPermissionRequested) {
             findViewById(R.id.fake_layout).setVisibility(View.GONE);
             findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
@@ -234,7 +215,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     }
 
     private void setupWizard() {
-        actionBar = (Toolbar) findViewById(R.id.toolbar_main);
+        actionBar = findViewById(R.id.toolbar_main);
         setSupportActionBar(actionBar);
         initialization();
         //load player state from sharedPreferences
@@ -245,30 +226,16 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         //new MediaPlayer
         player = new MediaPlayer();
         player.setOnCompletionListener(this);
-        previousSongPositions = new ArrayList<Integer>();
-        //fetching all audio files from external and internal sdCards
-        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            Log.i("if SDK", "" + android.os.Build.VERSION.SDK_INT);
-            if (checkingExternalStoragePermission()) {
-                alreadyFetchedAudioFiles();
-            } else {
-                MainActivity.this.finish();
-            }
-        } else {
-            Log.i("else SDK", "" + android.os.Build.VERSION.SDK_INT);
-            alreadyFetchedAudioFiles();
-        }*/
+        previousSongPositions = new ArrayList<>();
         alreadyFetchedAudioFiles();
         telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        headsetUnpluggedIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         headsetPlugUnplugIntentFilter = new IntentFilter(AudioManager.ACTION_HEADSET_PLUG);
         setupNotificationControl();
     }
 
     //get bitmap from specific song for notification
     private Bitmap getImageResource(ImageView currentSongAlbumArtState) {
-        Bitmap bitmap = ((BitmapDrawable) currentSongAlbumArtState.getDrawable()).getBitmap();
-        return bitmap;
+        return ((BitmapDrawable) currentSongAlbumArtState.getDrawable()).getBitmap();
     }
 
     //setting up notification media control
@@ -293,15 +260,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         remoteViews.setTextViewText(R.id.noti_current_song, "" + currentSongState.getText().toString());
         remoteViews.setTextViewText(R.id.noti_current_artist_name, "" + currentSongArtistNameState.getText().toString());
 
-        btn_noti_prev_song_btn_intent = new Intent(CUSTOM_NOTI_PREVIOUS_SONG);
+        Intent btn_noti_prev_song_btn_intent = new Intent(CUSTOM_NOTI_PREVIOUS_SONG);
         btn_noti_prev_song_btn_intent.putExtra("prev_id", CUSTOM_NOTI_PREVIOUS_SONG_ID);
         sendBroadcast(btn_noti_prev_song_btn_intent);
 
-        btn_noti_play_pause_btn_intent = new Intent(CUSTOM_NOTI_PLAY_PAUSE);
+        Intent btn_noti_play_pause_btn_intent = new Intent(CUSTOM_NOTI_PLAY_PAUSE);
         btn_noti_play_pause_btn_intent.putExtra("play_pause_id", CUSTOM_NOTI_PLAY_PAUSE_ID);
         sendBroadcast(btn_noti_play_pause_btn_intent);
 
-        btn_noti_next_song_btn_intent = new Intent(CUSTOM_NOTI_NEXT_SONG);
+        Intent btn_noti_next_song_btn_intent = new Intent(CUSTOM_NOTI_NEXT_SONG);
         btn_noti_next_song_btn_intent.putExtra("next_id", CUSTOM_NOTI_NEXT_SONG_ID);
         sendBroadcast(btn_noti_next_song_btn_intent);
 
@@ -351,37 +318,26 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         menuPlaylistItem = menu.findItem(R.id.main_action_current_playlist);
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE)
             menuPlaylistItem.setVisible(false);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuSearchItem);
+        SearchView searchView = (SearchView) menuSearchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filteredIndexes = new ArrayList<Integer>();
-                filteredIndexPosition = 0;
-                ArrayList<String> currentFilteredList = new ArrayList<String>();
+                filteredIndexes = new ArrayList<>();
+                ArrayList<String> currentFilteredList = new ArrayList<>();
                 for (gCursor.moveToFirst(); !gCursor.isAfterLast(); gCursor.moveToNext()) {
                     if (gCursor.getString(gCursor.getColumnIndex(MediaStore.MediaColumns.TITLE)).toLowerCase().contains(query.toLowerCase()) || gCursor.getString(gCursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)).toLowerCase().contains(query.toLowerCase())) {
                         currentFilteredList.add(gCursor.getString(gCursor.getColumnIndex(MediaStore.MediaColumns.TITLE)));
                         filteredIndexes.add(gCursor.getPosition());
-                        filteredIndexPosition++;
                     }
                 }
-                ArrayAdapter<String> filteredAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, currentFilteredList);
+                ArrayAdapter<String> filteredAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, currentFilteredList);
                 songList.setAdapter(filteredAdapter);
                 songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Logging.getInstance().I("Filtered", "onItemClicked " + position);
-                        Logging.getInstance().I("Filtered", "onItemClicked++ " + filteredIndexes.get(position));
                         songPositionFromList = filteredIndexes.get(position);
                         startPlay(getCurrentFile(songPositionFromList));
-                        //updateSongInfoFromDialog(position);
-                        Log.i("Search result", "" + position);
-                        /*if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
-                            findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-                            //findViewById(R.id.parentLayout).setVisibility(View.GONE);
-                            //findViewById(R.id.current_playlist).setVisibility(View.GONE);
-                        }*/
-                        visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
+                        visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
                     }
                 });
                 return true;
@@ -400,11 +356,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                Logging.getInstance().I(TAG, "MainActivity Back btn");
-                /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-                findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
-				setActionBarStatus();*/
-                visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
+                visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout));
                 return true;
             }
             case R.id.main_action_search: {
@@ -427,7 +379,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
             findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
 			setActionBarStatus();*/
-            visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
+            visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout));
             return;
         }
         if (doubleBackToExitPressedOnce) {
@@ -482,12 +434,12 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         savePlayerStates("shuffleOn", shuffleFlag);
         savePlayerStates("repeatOn", isRepeatOn);
         savePlayerStates("repeatOneOn", isRepeatOneOn);
-        savePlayerIntegerStates("lastPlayedSong", lastPlayedSong);
+        savePlayerIntegerStates(lastPlayedSong);
         Logging.getInstance().I(TAG, "onStop");
         Intent notificationIntent = new Intent(mContext, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
         PendingIntent pendingIntentSmall = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-        builder = new NotificationCompat.Builder(mContext);
+        builder = new NotificationCompat.Builder(mContext, "musician_notification");
         builder.setCustomContentView(smallRemoteViews)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -517,9 +469,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         //finish();
     }
 
-    private void visibleAnimation(View visible, View gone, int duration) {
+    private void visibleAnimation(View visible, View gone) {
         TranslateAnimation animationView = new TranslateAnimation(0, -gone.getWidth(), 0, 0);
-        animationView.setDuration(duration);
+        animationView.setDuration(700);
         animationView.setFillBefore(true);
         visible.startAnimation(animationView);
         visible.setVisibility(View.VISIBLE);
@@ -576,12 +528,10 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     setPlayerStates();
                 } else {
                     player.start();
-                    updateSongInfo(songPositionFromList);
+                    updateSongInfo();
                     setPlayerStates();
                 }
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
+            } catch (IllegalArgumentException | IllegalStateException e) {
                 e.printStackTrace();
             }
         }
@@ -592,106 +542,48 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     /*player.stop();
                     player.reset();*/
             if (shuffleFlag) {
-                songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
+                songPositionFromList = randomPosition.nextInt(totalSongs);
             } else {
                 songPositionFromList = (songPositionFromList + 1) % totalSongs;
             }
-                    /*uri = Uri.parse(mediaCursorAdapter.getCursor().getString(songPositionFromList));
-                    try {
-                        player.setDataSource(getApplicationContext(), uri);
-                        player.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //Log.i("songPositionFromList ", "" + songPositionFromList);
-                    player.start();
-                    updateSongInfo(songPositionFromList);
-                    playPause.setImageResource(R.drawable.btn_pause);*/
             if (songPositionFromList == -1) {
                 Log.i("Next button clicked", "no song selected " + lastPlayedSong);
                 startPlay(getCurrentFile(lastPlayedSong));
-                //Log.i("seekbarchangedNext+", "" + isSeekBarChangedListenerStarted);
-                //setSeekBarChangedListener();
             } else {
                 startPlay(getCurrentFile(songPositionFromList));
-                Log.i("Next button clicked", "Player already running" + lastPlayedSong);
-                //Log.i("seekbarchangedNext-", "" + isSeekBarChangedListenerStarted);
-                //setSeekBarChangedListener();
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             e.printStackTrace();
         }
     }
 
     private void setPreviousSongButtonClickListener() {
         try {
-                    /*player.stop();
-                    player.reset();*/
-            //Log.i("Previous ", "" + songPositionFromList);
-                    /*if (songPositionFromList - 1 < 0) {
-                        if (shuffleFlag) {
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						} else {
-							songPositionFromList = totalSongs - 1;
-						}
-					} else {
-						if (shuffleFlag)
-							songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-						else
-							songPositionFromList--;
-					}
-
-					Log.i("PreviousFile ", songPositionFromList + "");*/
-            Log.i("previous list size", "" + previousSongPositions.size());
             if (previousSongPositions.size() > 0) {
                 previousSongIndex--;
                 if (previousSongIndex >= 0 && previousSongIndex < totalSongs) {
                     Log.i("Previous button clicked", "available pre " + previousSongPositions.get(previousSongIndex));
                     songPositionFromList = previousSongPositions.get(previousSongIndex);
                     startPlay(getCurrentFile(songPositionFromList));
-                    //Log.i("seekbarchangedPre+", "" + isSeekBarChangedListenerStarted);
-                    //setSeekBarChangedListener();
                 } else {
                     songPositionFromList = previousSongPositions.get(0);
                     startPlay(getCurrentFile(songPositionFromList));
                     Log.i("Previous button clicked", "available pre " + previousSongPositions.get(0));
-                    //setSeekBarChangedListener();
                 }
             } else {
                 songPositionFromList = lastPlayedSong;
                 startPlay(getCurrentFile(songPositionFromList));
                 Log.i("Previous button clicked", "last played song" + lastPlayedSong);
             }
-            //uri = Uri.parse(songList.getItemAtPosition(songPositionFromList).toString());
-            //uri = Uri.parse(songs.get(songPositionFromList).toString());
-                    /*try {
-                        //player.setDataSource(getApplicationContext(), uri);
-                        player.setDataSource(currentFile);
-                        player.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    playPause.setImageResource(R.drawable.btn_pause);
-                    //Log.i("songPositionFromList ", "" + songPositionFromList);-
-                    player.start();
-                    updateSongInfo(songPositionFromList);*/
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             e.printStackTrace();
         }
     }
 
-    public void customToast(String text) {
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-    }
-
-    private void updateSongInfo(int currentPosition) {
-        finalTime = player.getDuration();
+    private void updateSongInfo() {
+        double finalTime = player.getDuration();
         bar.setMax((int) finalTime);
-        rightDuration.setText(String.format("%d:%d",
+        rightDuration.setText(String.format(Locale.getDefault(), "%d:%d",
                 TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                 TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) finalTime)))
@@ -719,58 +611,38 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     }
 
     public void initialization() {
-        playingSong = (Button) findViewById(R.id.playingSong);
-        playlist_action_bar_back_btn = (Button) findViewById(R.id.playlist_action_bar_back_btn);
-        current_playlist_action_bar_activity_content = (TextView) findViewById(R.id.current_playlist_action_bar_activity_content);
-        playlist_action_bar_search_btn = (FrameLayout) findViewById(R.id.playlist_action_bar_search_btn);
-        search_back_btn = (Button) findViewById(R.id.search_back_btn);
-        search_song_et = (EditText) findViewById(R.id.search_song_et);
-        searchView = (SearchView) findViewById(R.id.searchView);
-        /*floatingActionButton = (FloatingActionButton) findViewById(R.id.shuffle_all_songs);
-        floatingActionButton.setOnClickListener(this);*/
-        tvSongsSize = (TextView) findViewById(R.id.songsSize);
-        songList = (ListView) findViewById(android.R.id.list);
-        currentPlayList = (ListView) findViewById(R.id.lv_current_playlist);
-        //registerForContextMenu(songList);
-        bar = (SeekBar) findViewById(R.id.seekBar);
-        preSong = (ImageView) findViewById(R.id.previous);
-        nextSong = (ImageView) findViewById(R.id.next);
-        thumbnail = (ImageView) findViewById(R.id.thumbnail);
-        //thumbnail.setOnClickListener(this);
-//		leftSeek = (Button) findViewById(R.id.leftSeeking);
-//		rightSeek = (Button) findViewById(R.id.rightSeeking);
-        playPause = (ImageView) findViewById(R.id.playPause);
-        currentSong = (TextView) findViewById(R.id.currentSong);
-        currentSongState = (TextView) findViewById(R.id.currentSongState);
-        currentSongArtistNameState = (TextView) findViewById(R.id.currentSongArtistNameState);
-        currentSongArtistName = (TextView) findViewById(R.id.currentSongArtistName);
-        leftDuration = (TextView) findViewById(R.id.leftDuration);
-        rightDuration = (TextView) findViewById(R.id.rightDuration);
-        goToSongList = (Button) findViewById(R.id.songList);
-        playPauseState = (ImageView) findViewById(R.id.playPauseState);
-        currentSongAlbumArtState = (ImageView) findViewById(R.id.currentSongAlbumArtState);
-        shuffle = (Button) findViewById(R.id.shuffle);
-        repeat = (Button) findViewById(R.id.repeat);
-        nowPlayingSongs = (Button) findViewById(R.id.imageViewSongList);
+        Button playingSong = findViewById(R.id.playingSong);
+        search_song_et = findViewById(R.id.search_song_et);
+        tvSongsSize = findViewById(R.id.songsSize);
+        songList = findViewById(android.R.id.list);
+        bar = findViewById(R.id.seekBar);
+        ImageView preSong = findViewById(R.id.previous);
+        ImageView nextSong = findViewById(R.id.next);
+        thumbnail = findViewById(R.id.thumbnail);
+        playPause = findViewById(R.id.playPause);
+        currentSong = findViewById(R.id.currentSong);
+        currentSongState = findViewById(R.id.currentSongState);
+        currentSongArtistNameState = findViewById(R.id.currentSongArtistNameState);
+        currentSongArtistName = findViewById(R.id.currentSongArtistName);
+        leftDuration = findViewById(R.id.leftDuration);
+        rightDuration = findViewById(R.id.rightDuration);
+        Button goToSongList = findViewById(R.id.songList);
+        playPauseState = findViewById(R.id.playPauseState);
+        currentSongAlbumArtState = findViewById(R.id.currentSongAlbumArtState);
+        shuffle = findViewById(R.id.shuffle);
+        repeat = findViewById(R.id.repeat);
+        Button nowPlayingSongs = findViewById(R.id.imageViewSongList);
 
         preSong.setOnClickListener(this);
         nextSong.setOnClickListener(this);
-//		leftSeek.setOnClickListener(this);
-//		rightSeek.setOnClickListener(this);
         playPause.setOnClickListener(this);
         goToSongList.setOnClickListener(this);
         playPauseState.setOnClickListener(this);
         shuffle.setOnClickListener(this);
         repeat.setOnClickListener(this);
         playingSong.setOnClickListener(this);
-//		playlist_action_bar_search_btn.setOnClickListener(this);
-//		search_back_btn.setOnClickListener(this);
-//		playlist_action_bar_back_btn.setOnClickListener(this);
-        //player.setOnCompletionListener(this);
         nowPlayingSongs.setOnClickListener(this);
-        homeFab = (FloatingActionButton) findViewById(R.id.fab_main);
-        homeFab.setOnClickListener(this);
-        showPlayerState = (LinearLayout) findViewById(R.id.showPlayerState);
+        LinearLayout showPlayerState = findViewById(R.id.showPlayerState);
         showPlayerState.setOnClickListener(this);
     }
 
@@ -783,25 +655,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 break;
             }
         }
-        return flag;
-    }
-
-    private boolean checkingExternalStoragePermission() {
-        boolean flag = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("if flag", "" + flag);
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Log.i("if if flag", "" + flag);
-            } else {
-                Log.i("if else flag", "" + flag);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 200);
-                flag = true;
-            }
-        } else {
-            Log.i("else flag", "" + flag);
-            flag = true;
-        }
-        Log.i("flag", "" + flag);
         return flag;
     }
 
@@ -828,11 +681,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                         sleep(1001);
                         currentPosition = player.getCurrentPosition();
                         bar.setProgress((int) currentPosition);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
+                    } catch (InterruptedException | IllegalArgumentException | IllegalStateException e) {
                         e.printStackTrace();
                     }
                 }
@@ -867,15 +716,15 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         SharedPreferences playerStates = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor playerStatesEditor = playerStates.edit();
         playerStatesEditor.putBoolean(key, value);
-        playerStatesEditor.commit();
+        playerStatesEditor.apply();
         //Toast.makeText(this, "Player States Saved", Toast.LENGTH_SHORT).show();
     }
 
-    public void savePlayerIntegerStates(String key, int lastPlayedSong) {
+    public void savePlayerIntegerStates(int lastPlayedSong) {
         SharedPreferences playerStates = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor playerStatesEditor = playerStates.edit();
-        playerStatesEditor.putInt(key, lastPlayedSong);
-        playerStatesEditor.commit();
+        playerStatesEditor.putInt("lastPlayedSong", lastPlayedSong);
+        playerStatesEditor.apply();
         //Toast.makeText(this, "Player Integer States Saved", Toast.LENGTH_SHORT).show();
     }
 
@@ -884,8 +733,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         boolean shuffleOn = playerStates.getBoolean("shuffleOn", false);
         boolean repeatOn = playerStates.getBoolean("repeatOn", false);
         boolean repeatOneOn = playerStates.getBoolean("repeatOneOn", false);
-        int lastSong = playerStates.getInt("lastPlayedSong", 0);
-        lastPlayedSong = lastSong;
+        lastPlayedSong = playerStates.getInt("lastPlayedSong", 0);
 
         if (shuffleOn) {
             shuffleFlag = true;
@@ -902,12 +750,11 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             isRepeatOneOn = true;
             isRepeatOn = false;
             repeat.setBackgroundResource(R.drawable.player_repeat_one_on_btn);
-        } else if (!repeatOn && !repeatOneOn) {
+        } else if (!repeatOn) {
             isRepeatOn = false;
             isRepeatOneOn = false;
             repeat.setBackgroundResource(R.drawable.player_repeat_off_btn);
         }
-        //Toast.makeText(this, "Player States restored", Toast.LENGTH_SHORT).show();
     }
 
     private void setCurrentSongAlbumArtState(int currentPosition) {
@@ -943,7 +790,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         if (notificationManager != null && builder != null)
             notificationManager.notify(CUSTOM_NOTI_PREVIOUS_SONG_ID, builder.build());
         //albumart setup
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         bitmap = getCurrentAlbumArt(mContext, songPositionFromList);
         if (bitmap != null) {
             thumbnail.setImageBitmap(bitmap);
@@ -972,7 +819,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             actionBar.setTitle(getString(R.string.app_name));
             actionBar.setSubtitle(null);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            //actionBar.setHomeButtonEnabled(false);
         }
     }
 
@@ -991,27 +837,16 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             player.setDataSource(file);
             player.prepare();
             player.start();
-            /*if (!seekBarUpdating.isAlive())
-                seekBarUpdating.start();*/
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        /*if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-            findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
-            findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-        }*/
         bar.setMax(player.getDuration());
-        //thumbnail.setImageDrawable(getCurrentAlbumArt(songPositionFromList));
         if (!checkingPreviousSongIndexDuplicity(songPositionFromList)) {
             previousSongPositions.add(songPositionFromList);
             previousSongIndex++;
         }
         setActionBarStatus();
-        updateSongInfo(songPositionFromList);
+        updateSongInfo();
         setPlayerStates();
         setSeekBarChangedListener();
     }
@@ -1021,12 +856,12 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         int currentSongPosition = songPositionFromList;
         Logging.getInstance().I(TAG, "onCompletion");
         if (shuffleFlag && !isRepeatOneOn) {
-            songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
+            songPositionFromList = randomPosition.nextInt(totalSongs);
         } else if (shuffleFlag && isRepeatOn) {
-            songPositionFromList = randomPosition.nextInt((totalSongs - 0) + 0);
-        } else if ((!shuffleFlag && isRepeatOn) || (!shuffleFlag && !isRepeatOn) || isRepeatOn) {
+            songPositionFromList = randomPosition.nextInt(totalSongs);
+        } else if (!shuffleFlag && isRepeatOn || !shuffleFlag) {
             songPositionFromList = (songPositionFromList + 1) % totalSongs;
-        } else if (isRepeatOneOn) {
+        } else {
             songPositionFromList = currentSongPosition;
         }
         Log.i("onCompletion called", " " + songPositionFromList);
@@ -1035,61 +870,24 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        /*if (songPositionFromList == -1)
-            songPositionFromList = lastPlayedSong;*/
         int id = v.getId();
         switch (id) {
             case R.id.allow_permission: {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
                 break;
             }
-            case R.id.fab_main: {
+            /*case R.id.fab_main: {
                 if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
-                    /*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
-                    findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();*/
-                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
+                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
                 } else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
-                    /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
-                    findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();*/
-                    visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
+                    visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout));
                 }
                 break;
-            }
+            }*/
             case R.id.playPause: {
-                /*
-                Log.e("Play position", "" + songPositionFromList);
-                if (songPositionFromList == -1) {
-                    songPositionFromList = lastPlayedSong;
-                    Log.i("Play button clicked", " no list item" + songPositionFromList);
-                    startPlay(getCurrentFile(songPositionFromList));
-                    if (seekBarUpdating != null && !seekBarUpdating.isAlive())
-                        setSeekBarUpdating();
-                    Log.i("seekbarchanged+-", "" + isSeekBarChangedListenerStarted);
-                    //setSeekBarChangedListener();
-                } else {
-                    try {
-                        if (player.isPlaying()) {
-                            Log.i("position here if", "" + songPositionFromList);
-                            player.pause();
-                            setPlayerStates();
-                        } else {
-                            Log.i("position here", "" + songPositionFromList);
-                            player.start();
-                            updateSongInfo(songPositionFromList);
-                            setPlayerStates();
-                        }
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    }
-                }*/
                 setPlayPauseButtonClickListener();
                 break;
             }
-
             //repeating functionality
             case R.id.repeat: {
                 if (!isRepeatOn && !isRepeatOneOn) {
@@ -1139,7 +937,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                         if (findViewById(R.id.now_playing_layout).getVisibility() == View.VISIBLE) {
                             /*findViewById(R.id.now_playing_layout).setVisibility(View.GONE);
                             findViewById(R.id.home_page_song_list_layout).setVisibility(View.VISIBLE);*/
-                            visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout), 700);
+                            visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout));
                         }
                     }
                 }, 100);
@@ -1227,7 +1025,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                         findViewById(R.id.search_layout).setVisibility(View.VISIBLE);
                         search_song_et.requestFocus();
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(search_song_et, InputMethodManager.SHOW_IMPLICIT);
+                        if (imm != null) {
+                            imm.showSoftInput(search_song_et, InputMethodManager.SHOW_IMPLICIT);
+                        }
                     }
                 }, 500);
                 break;
@@ -1239,7 +1039,9 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     public void run() {
                         findViewById(R.id.search_layout).setVisibility(View.GONE);
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(search_song_et.getWindowToken(), 0);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(search_song_et.getWindowToken(), 0);
+                        }
                     }
                 }, 300);
 
@@ -1253,10 +1055,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             }
             case R.id.showPlayerState: {
                 if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
-                    /*findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);
-                    findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
-					setActionBarStatus();*/
-                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
+                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
                 }
                 break;
             }
@@ -1275,7 +1074,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
             /*findViewById(R.id.now_playing_layout).setVisibility(View.VISIBLE);
             findViewById(R.id.home_page_song_list_layout).setVisibility(View.GONE);*/
-            visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout), 700);
+            visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
         }
         startPlay(getCurrentFile(position));
         //updateSongInfoFromDialog(position);
@@ -1284,17 +1083,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     public class ButtonClickListenerEvent extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            //notificationManager.cancel(intent.getExtras().getInt("prev_id"));
-            /*if (intent.getAction().equals(CUSTOM_NOTI)) {
-                Log.i("Notific", "Player not null");
-            } else {
-                Log.i("Notific", "Player null");
-            }*/
-            if (intent.getExtras().getInt("prev_id") == CUSTOM_NOTI_PREVIOUS_SONG_ID) {
-                Log.i("Notification", "Previous");
-                setPreviousSongButtonClickListener();
-            } else if (intent.getExtras().getInt("play_pause_id") == CUSTOM_NOTI_PLAY_PAUSE_ID) {
+            if (intent.getExtras().getInt("play_pause_id") == CUSTOM_NOTI_PLAY_PAUSE_ID) {
                 Log.i("Notification", "PlayPause");
                 if (player != null) {
                     //Log.i("Notific", "Player not null");
