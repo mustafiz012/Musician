@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "musician.kuet.musta"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 2
         versionName "2.0"
 
@@ -21,21 +21,15 @@ android {
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:26.+'
-        compile 'com.android.support:recyclerview-v7:26.+'
-        compile 'com.android.support:design:26.+'
-        compile 'com.google.android.gms:play-services-maps:10.0.1'
-        compile 'com.google.android.gms:play-services-ads:10.0.1'
-        compile 'com.android.support:cardview-v7:26.+'
-    }
-
-    dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile 'com.android.support:appcompat-v7:26.+'
-        compile 'com.android.support:support-v4:26.+'
+        compile 'com.android.support:appcompat-v7:27.0.2'
+        compile 'com.android.support:recyclerview-v7:27.0.2'
+        compile 'com.android.support.constraint:constraint-layout:1.0.2'
+        compile 'com.android.support:design:27.0.2'
+        compile 'com.google.android.gms:play-services-maps:11.8.0'
+        compile 'com.google.android.gms:play-services-ads:11.8.0'
+        compile 'com.android.support:cardview-v7:27.0.2'
+        /*=======third party========*/
         compile 'com.github.rey5137:material:1.2.4'
+        /*=======third party========*/
     }
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
