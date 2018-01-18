@@ -31,11 +31,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -66,7 +64,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     public String CUSTOM_NOTI_NEXT_SONG = "android.intent.action.CUSTOM_NOTI_NEXT_SONG";
     //private static final String TAG = null;
     private ListView songList;
-    private EditText search_song_et;
     private int songPositionFromList = -1, totalSongs = 0, previousSongIndex = 0, lastPlayedSong = 0;
     private List<Integer> previousSongPositions;
     private Thread seekBarUpdating;
@@ -612,7 +609,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
     public void initialization() {
         Button playingSong = findViewById(R.id.playingSong);
-        search_song_et = findViewById(R.id.search_song_et);
         tvSongsSize = findViewById(R.id.songsSize);
         songList = findViewById(android.R.id.list);
         bar = findViewById(R.id.seekBar);
@@ -876,14 +872,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
                 break;
             }
-            /*case R.id.fab_main: {
-                if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE) {
-                    visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
-                } else if (findViewById(R.id.home_page_song_list_layout).getVisibility() == View.GONE) {
-                    visibleAnimation(findViewById(R.id.home_page_song_list_layout), findViewById(R.id.now_playing_layout));
-                }
-                break;
-            }*/
             case R.id.playPause: {
                 setPlayPauseButtonClickListener();
                 break;
@@ -966,37 +954,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     }
                 }, 400);
                 break;
-            /*case R.id.shuffle_all_songs: {
-                //Toast.makeText(this, "Not implemented yet :(", Toast.LENGTH_SHORT).show();
-				if (songPositionFromList == -1) {
-					songPositionFromList = lastPlayedSong;
-					startPlay(getCurrentFile(songPositionFromList));
-					if (seekBarUpdating != null && !seekBarUpdating.isAlive())
-						setSeekBarUpdating();
-					Log.i("seekbarchanged+-", "" + isSeekBarChangedListenerStarted);
-					//setSeekBarChangedListener();
-				} else {
-					try {
-						if (player.isPlaying()) {
-							Log.i("position here if", "" + songPositionFromList);
-							player.pause();
-							playPause.setImageResource(R.drawable.btn_play);
-						} else {
-							Log.i("position here", "" + songPositionFromList);
-							player.start();
-							playPause.setImageResource(R.drawable.btn_pause);
-							updateSongInfo(songPositionFromList);
-						}
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					}
-				}
-				break;
-			}*/
             }
-            case R.id.playlist_action_bar_back_btn: {
+            /*case R.id.playlist_action_bar_back_btn: {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1052,7 +1011,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     }
                 }, 500);
                 break;
-            }
+            }*/
             case R.id.showPlayerState: {
                 if (findViewById(R.id.now_playing_layout).getVisibility() == View.GONE || findViewById(R.id.home_page_song_list_layout).getVisibility() == View.VISIBLE) {
                     visibleAnimation(findViewById(R.id.now_playing_layout), findViewById(R.id.home_page_song_list_layout));
