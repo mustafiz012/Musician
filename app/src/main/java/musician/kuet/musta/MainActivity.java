@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -189,10 +188,8 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Log.i("Android-Version", "Post-Lollipop");
-            setContentView(R.layout.activity_main);
-        }
+        setContentView(R.layout.activity_main);
+
         Button allowPermission = findViewById(R.id.allow_permission);
         allowPermission.setOnClickListener(this);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

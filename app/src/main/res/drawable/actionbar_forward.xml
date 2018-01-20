@@ -3,4 +3,4 @@
     android:drawable="@drawable/actionbar_back_btn_black"
     android:fromDegrees="180"
     android:toDegrees="180"
-    android:visible="true"></rotate>
+    android:visible="true" />

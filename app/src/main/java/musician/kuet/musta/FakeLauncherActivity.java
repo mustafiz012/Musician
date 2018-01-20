@@ -17,7 +17,6 @@ import android.widget.TextView;
 public class FakeLauncherActivity extends Activity {
 
     private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 201;
-    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 202;
     private boolean isPermissionGranted = false;
     private boolean isPermissionRequested = false;
     private Button allow_permission_fake = null;
@@ -44,7 +43,7 @@ public class FakeLauncherActivity extends Activity {
                         waited += 100;
                     }
                 } catch (Exception e) {
-                    e.toString();
+                    e.printStackTrace();
                 } finally {
                     runOnUiThread(new Runnable() {
                         @Override

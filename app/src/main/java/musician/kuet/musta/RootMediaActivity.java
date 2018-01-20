@@ -14,14 +14,12 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,15 +28,12 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
-public class RootMediaActivity extends AppCompatActivity {
+public abstract class RootMediaActivity extends AppCompatActivity {
 
     private final static int READ_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 201;
-    private final static int WRITE_EXTERNAL_STORAGE_REQUEST_ROOT_CODE = 202;
     public MediaCursorAdapter rootMediaCursorAdapter = null;
     public Cursor gCursor = null;
     public int rootTotalSongs = 0;
-    public ActionBar gActionBar = null;
-    ListView rootSongList = null;
     private boolean isRootPermissionGranted = false;
     private boolean isRootPermissionRequested = false;
 
@@ -78,14 +73,14 @@ public class RootMediaActivity extends AppCompatActivity {
     }
 
     public String getCurrentFileName(int currentPosition) {
-        String songName = null;
+        String songName;
         Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
         songName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
         return songName;
     }
 
     public String getCurrentArtistName(int currentPosition) {
-        String artistName = null;
+        String artistName;
         Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
         artistName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
         return artistName;
@@ -106,20 +101,16 @@ public class RootMediaActivity extends AppCompatActivity {
             if (pfd != null) {
                 FileDescriptor fd = pfd.getFileDescriptor();
                 bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
-                pfd = null;
-                fd = null;
             }
-        } catch (Error ee) {
+        } catch (Error | Exception ee) {
             ee.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return bm;
     }
 
     public String getCurrentFile(int currentPosition) {
         //songPositionFromList = currentPosition;
-        String songData = null;
+        String songData;
         Cursor cursor = (Cursor) rootMediaCursorAdapter.getItem(currentPosition);
         songData = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
         return songData;
@@ -140,7 +131,7 @@ public class RootMediaActivity extends AppCompatActivity {
     //creating a media cursor adapter which will be publicly accessible
     public class MediaCursorAdapter extends SimpleCursorAdapter {
 
-        public MediaCursorAdapter(Context context, int layout, Cursor c) {
+        MediaCursorAdapter(Context context, int layout, Cursor c) {
             super(context, layout, c,
                     new String[]{MediaStore.MediaColumns.TITLE, MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.AudioColumns.DURATION, MediaStore.Audio.Artists.Albums.ALBUM_ID},
                     new int[]{R.id.displayname, R.id.title, R.id.duration, R.id.single_album_art});
@@ -164,13 +155,11 @@ public class RootMediaActivity extends AppCompatActivity {
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
                 Log.i("Uri", "" + uri.toString());
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-                Log.i("PDF", "" + pfd.toString());
                 if (pfd != null) {
-                    FileDescriptor fd = pfd.getFileDescriptor();
-                    bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
-                    pfd = null;
-                    fd = null;
+                    Log.i("PDF", "" + pfd.toString());
                 }
+                FileDescriptor fd = pfd != null ? pfd.getFileDescriptor() : null;
+                bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
             } catch (Error ee) {
                 ee.printStackTrace();
             } catch (FileNotFoundException e) {
