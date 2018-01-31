@@ -17,6 +17,7 @@
     <!--above v21-->
     <color name="ripple_dark">#1dffffff</color>
     <color name="ripple_light">#1d000000</color>
+    <color name="app_color">#8EAE3C</color>
 
     <!-- opacity reference -->
     <color name="color_000000_op100">#ff000000</color>

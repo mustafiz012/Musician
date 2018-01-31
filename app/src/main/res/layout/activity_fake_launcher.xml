@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorAccent"
-    tools:context="musician.kuet.musta.FakeLauncherActivity">
+    tools:context="musician.kuet.musta.activities.FakeLauncherActivity">
 
     <Button
         android:id="@+id/allow_permission_fake"

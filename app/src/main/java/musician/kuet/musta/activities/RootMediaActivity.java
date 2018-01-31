@@ -1,4 +1,4 @@
-package musician.kuet.musta;
+package musician.kuet.musta.activities;
 
 import android.Manifest;
 import android.content.ContentUris;
@@ -27,6 +27,8 @@ import android.widget.Toast;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+
+import musician.kuet.musta.R;
 
 public abstract class RootMediaActivity extends AppCompatActivity {
 

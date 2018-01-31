@@ -1,4 +1,4 @@
-package musician.kuet.musta;
+package musician.kuet.musta.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import musician.kuet.musta.R;
 
 public class CurrentPlaylistActivity extends RootMediaActivity implements AdapterView.OnItemClickListener {
     private ListView nowPlayingList = null;

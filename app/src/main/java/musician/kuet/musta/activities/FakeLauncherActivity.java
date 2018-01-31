@@ -1,4 +1,4 @@
-package musician.kuet.musta;
+package musician.kuet.musta.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import musician.kuet.musta.MainActivity;
+import musician.kuet.musta.R;
 
 public class FakeLauncherActivity extends Activity {
 
