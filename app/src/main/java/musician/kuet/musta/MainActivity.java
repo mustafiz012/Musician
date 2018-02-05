@@ -172,7 +172,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                     case 0: {
                         Log.i("state", "Headset is unplugged");
                         if (isPlugUnplugOccurred && player.isPlaying()) {
-                            setPlayPauseButtonClickListener();
+                            playPauseButtonClick();
                             isPlugUnplugOccurred = false;
                         }
                         break;
@@ -181,7 +181,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                         Log.i("state", "Headset is plugged");
                         if (player != null && !isPlugUnplugOccurred) {
                             isPlugUnplugOccurred = true;
-                            //setPlayPauseButtonClickListener();
+                            //playPauseButtonClick();
                         }
                         break;
                     }
@@ -512,7 +512,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         unregisterReceiver(broadcastReceiver);
     }
 
-    private void setPlayPauseButtonClickListener() {
+    private void playPauseButtonClick() {
         Log.i("setPlayPauseButton", "ClickListener" + songPositionFromList);
         if (!isPlayerStartedFirstTimeYet || songPositionFromList == -1) {
             songPositionFromList = lastPlayedSong;
@@ -535,7 +535,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
     }
 
-    private void setNextSongButtonClickListener() {
+    private void nextButtonClick() {
         try {
                     /*player.stop();
                     player.reset();*/
@@ -555,7 +555,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
         }
     }
 
-    private void setPreviousSongButtonClickListener() {
+    private void prevButtonClick() {
         try {
             if (previousSongPositions.size() > 0) {
                 previousSongIndex--;
@@ -806,7 +806,6 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
             actionBar.setSubtitle("" + getCurrentArtistName(songPositionFromList));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             //actionBar.setHomeButtonEnabled(true);
-
         } else {
             //homeFab.setVisibility(View.VISIBLE);
             findViewById(R.id.player_layout).setVisibility(View.VISIBLE);
@@ -872,7 +871,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 break;
             }
             case R.id.playPause: {
-                setPlayPauseButtonClickListener();
+                playPauseButtonClick();
                 break;
             }
             //repeating functionality
@@ -933,13 +932,13 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
 
             //next song button action
             case R.id.next: {
-                setNextSongButtonClickListener();
+                nextButtonClick();
                 break;
             }
 
             //previous song button action
             case R.id.previous: {
-                setPreviousSongButtonClickListener();
+                prevButtonClick();
                 break;
             }
             case R.id.playingSong: {
@@ -961,7 +960,7 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 break;
             }
             case R.id.playPauseState: {
-                setPlayPauseButtonClickListener();
+                playPauseButtonClick();
                 break;
             }
             default:
@@ -988,13 +987,13 @@ public class MainActivity extends RootMediaActivity implements View.OnClickListe
                 Log.i("Notification", "PlayPause");
                 if (player != null) {
                     //Log.i("Notific", "Player not null");
-                    setPlayPauseButtonClickListener();
+                    playPauseButtonClick();
                 } else {
                     Log.i("Notific", "Player null");
                 }
             } else if (intent.getExtras().getInt("next_id") == CUSTOM_NOTI_NEXT_SONG_ID) {
                 Log.i("Notification", "Next");
-                setNextSongButtonClickListener();
+                nextButtonClick();
             }
         }
     }
