@@ -39,7 +39,12 @@ public class MusicActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView = findViewById(R.id.rvSongList);
         mRecyclerView.setLayoutManager(layoutManager);
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        String[] projection = {MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA, MediaStore.Audio.Artists.ARTIST,
+                MediaStore.Audio.AudioColumns.DURATION};
+        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             mSongsAdapter = new SongsAdapter(this, R.layout.rv_item_layout, cursor);

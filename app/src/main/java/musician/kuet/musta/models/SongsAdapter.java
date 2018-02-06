@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 import musician.kuet.musta.R;
 
 /**
@@ -47,13 +49,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongVH> impl
         mCursor.moveToPosition(position);
         holder.songName.setText(mCursor.getString(mCursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)));
         holder.artistName.setText(mCursor.getString(mCursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)));
-        holder.songDuration.setText(mCursor.getString(mCursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)));
+        holder.songDuration.setText(String.format(Locale.getDefault(), "%.2f", mCursor.getFloat(mCursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)) / 60000));
 
         Long albumId = mCursor.getLong(mCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
         try {
             Uri uri = Uri.parse("content://media/external/audio/albumart");
             Uri albumArt = ContentUris.withAppendedId(uri, albumId);
-            Picasso.with(mContext).load(albumArt).into(holder.albumArt);
+            Picasso.with(mContext)
+                    .load(albumArt) //song album art
+                    .placeholder(R.drawable.default_albumart)   //showing before loading art
+                    .error(R.drawable.default_albumart) //if song album art unavailable
+                    .into(holder.albumArt);
         } catch (IllegalStateException ignored) {
         }
     }
