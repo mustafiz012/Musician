@@ -36,8 +36,9 @@
     <string name="playlist">Playlist</string>
     <string name="allow_permission">Allow Permission</string>
     <string name="now_playing">Now playing</string>
-    <string name="search_for_songs">Search for songs</string>
+    <string name="search_songs">Search songs</string>
     <string name="album_art">Album art</string>
     <string name="_0_0">0.0</string>
     <string name="title_activity_music">Musician</string>
+    <string name="options">Options</string>
 </resources>

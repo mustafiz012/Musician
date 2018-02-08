@@ -10,7 +10,7 @@
     android:paddingTop="2dp">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cvRecyclerItem"
+        android:id="@+id/cvSongItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -79,7 +79,9 @@
                 android:id="@+id/songOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/album_art"
+                android:clickable="true"
+                android:contentDescription="@string/options"
+                android:focusable="true"
                 android:src="@drawable/ic_more_options" />
 
         </LinearLayout>

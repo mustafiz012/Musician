@@ -1,4 +1,4 @@
-package musician.kuet.musta.models;
+package musician.kuet.musta.adapters;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -84,7 +84,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongVH> impl
 
         public SongVH(View view) {
             super(view);
-            song = view.findViewById(R.id.cvRecyclerItem);
+            song = view.findViewById(R.id.cvSongItem);
             albumArt = view.findViewById(R.id.albumArt);
             songName = view.findViewById(R.id.songName);
             artistName = view.findViewById(R.id.artistName);
