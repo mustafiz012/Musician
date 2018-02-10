@@ -50,16 +50,6 @@ public class MusicActivity extends AppCompatActivity implements OnClickListener 
         mSongsListAdapter = new SongsListAdapter(this, R.layout.rv_item_layout, SongLoader.getAllSongs(this), this);
         mRecyclerView.setAdapter(mSongsListAdapter);
 
-        /*String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-        String[] projection = {MediaStore.Audio.Media.ALBUM_ID,
-                MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA, MediaStore.Audio.Artists.ARTIST,
-                MediaStore.Audio.AudioColumns.DURATION};
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            mSongsAdapter = new SongsAdapter(this, R.layout.rv_item_layout, cursor);
-            mRecyclerView.setAdapter(mSongsAdapter);
-        }*/
     }
 
     @Override
