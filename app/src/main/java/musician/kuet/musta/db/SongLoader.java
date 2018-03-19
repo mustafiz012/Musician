@@ -18,7 +18,7 @@ public class SongLoader {
 
     private static final long[] sEmptyList = new long[0];
 
-    public static ArrayList<Song> getSongsForCursor(Cursor cursor) {
+    private static ArrayList<Song> getSongsForCursor(Cursor cursor) {
         ArrayList arrayList = new ArrayList();
         if ((cursor != null) && (cursor.moveToFirst()))
             do {
@@ -61,7 +61,7 @@ public class SongLoader {
         return song;
     }
 
-    public static final long[] getSongListForCursor(Cursor cursor) {
+    public static long[] getSongListForCursor(Cursor cursor) {
         if (cursor == null) {
             return sEmptyList;
         }
@@ -79,7 +79,6 @@ public class SongLoader {
             cursor.moveToNext();
         }
         cursor.close();
-        cursor = null;
         return list;
     }
 

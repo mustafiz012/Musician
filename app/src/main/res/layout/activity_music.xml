@@ -22,12 +22,17 @@
 
     <include layout="@layout/content_music" />
 
+    <include layout="@layout/bottom_sheet_player" />
+
+    <include layout="@layout/fragment_playback_controls" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabShuffleMusic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_shuffle_white" />
 
 </android.support.design.widget.CoordinatorLayout>

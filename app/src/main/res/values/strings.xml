@@ -41,4 +41,11 @@
     <string name="_0_0">0.0</string>
     <string name="title_activity_music">Musician</string>
     <string name="options">Options</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="album_name">Album name</string>
+    <string name="elapsed_time">0.0</string>
+    <string name="title_activity_drawer">Musician</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
