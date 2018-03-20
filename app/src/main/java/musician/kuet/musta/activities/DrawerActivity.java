@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import musician.kuet.musta.R;
 
@@ -58,7 +61,7 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.drawer, menu);
+        getMenuInflater().inflate(R.menu.menu_activity_drawer, menu);
         return true;
     }
 
@@ -70,7 +73,8 @@ public class DrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.drawer_action_settings) {
+        if (id == R.id.drawer_action_search) {
+            Toast.makeText(this, "Searching... :P ", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -92,7 +96,13 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_player_state) {
 
         } else if (id == R.id.nav_about) {
+            MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
+                    .title("Developer's info")
+                    .content("No one found!!\nhe's finding himself.")
+                    .positiveText("Ok");
 
+            MaterialDialog dialog = builder.build();
+            dialog.show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
