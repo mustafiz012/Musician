@@ -48,4 +48,10 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="music_library">Music library</string>
+    <string name="playlists">Playlists</string>
+    <string name="now_playing_queue">Now Playing Queue</string>
+    <string name="playing">Playing</string>
+    <string name="about">About</string>
+    <string name="music_player">Music Player</string>
 </resources>
