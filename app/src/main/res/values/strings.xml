@@ -90,5 +90,6 @@
     <string name="songs">Songs</string>
     <string name="albums">Albums</string>
     <string name="artists">Artists</string>
+    <string name="title_activity_search">Search</string>
 
 </resources>

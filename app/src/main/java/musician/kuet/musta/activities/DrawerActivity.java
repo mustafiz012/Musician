@@ -1,5 +1,6 @@
 package musician.kuet.musta.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -93,7 +93,8 @@ public class DrawerActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.drawer_action_search) {
-            Toast.makeText(this, "Searching... :P ", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Searching... :P ", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
 
@@ -103,33 +104,42 @@ public class DrawerActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        runnable = null;
 
-        if (id == R.id.nav_music_library) {
-            // Handle the camera action
-            runnable = navigateLibrary;
+        switch (item.getItemId()) {
 
-        } else if (id == R.id.nav_playlists) {
+            case R.id.nav_music_library: {
+                runnable = navigateLibrary;
+                break;
+            }
+            case R.id.nav_playlists: {
+                break;
+            }
+            case R.id.nav_now_playing_queue: {
 
-        } else if (id == R.id.nav_now_playing_queue) {
+                break;
+            }
+            case R.id.nav_player_state: {
 
-        } else if (id == R.id.nav_player_state) {
+                break;
+            }
+            case R.id.nav_about: {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(DrawerActivity.this)
+                                .title("Developer's info")
+                                .content("No one found!!\nhe's finding himself.")
+                                .positiveText("Ok");
 
-        } else if (id == R.id.nav_about) {
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MaterialDialog.Builder builder = new MaterialDialog.Builder(DrawerActivity.this)
-                            .title("Developer's info")
-                            .content("No one found!!\nhe's finding himself.")
-                            .positiveText("Ok");
-
-                    MaterialDialog dialog = builder.build();
-                    dialog.show();
-                }
-            }, 350);
+                        MaterialDialog dialog = builder.build();
+                        dialog.show();
+                    }
+                }, 350);
+                break;
+            }
         }
 
         if (runnable != null) {

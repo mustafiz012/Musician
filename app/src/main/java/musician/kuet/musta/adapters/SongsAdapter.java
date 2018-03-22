@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,14 +39,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongVH> impl
         this.mCursor = cursor;
     }
 
+    @NonNull
     @Override
-    public SongVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SongVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(mLayout, parent, false);
         return new SongVH(view);
     }
 
     @Override
-    public void onBindViewHolder(SongVH holder, int position) {
+    public void onBindViewHolder(@NonNull SongVH holder, int position) {
         mCursor.moveToPosition(position);
         holder.songName.setText(mCursor.getString(mCursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)));
         holder.artistName.setText(mCursor.getString(mCursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)));
