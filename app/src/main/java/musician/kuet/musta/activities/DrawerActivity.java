@@ -1,10 +1,13 @@
 package musician.kuet.musta.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,9 +21,21 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import musician.kuet.musta.R;
+import musician.kuet.musta.fragments.LibraryFragment;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private NavigationView navigationView;
+    private Runnable runnable;
+    private Runnable navigateLibrary = new Runnable() {
+        public void run() {
+            Fragment fragment = new LibraryFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment).commitAllowingStateLoss();
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +59,12 @@ public class DrawerActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //selecting initial item
+        navigationView.setCheckedItem(R.id.nav_music_library);
+        navigateLibrary.run();
     }
 
     @Override
@@ -89,6 +108,8 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_music_library) {
             // Handle the camera action
+            runnable = navigateLibrary;
+
         } else if (id == R.id.nav_playlists) {
 
         } else if (id == R.id.nav_now_playing_queue) {
@@ -96,13 +117,29 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_player_state) {
 
         } else if (id == R.id.nav_about) {
-            MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
-                    .title("Developer's info")
-                    .content("No one found!!\nhe's finding himself.")
-                    .positiveText("Ok");
 
-            MaterialDialog dialog = builder.build();
-            dialog.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(DrawerActivity.this)
+                            .title("Developer's info")
+                            .content("No one found!!\nhe's finding himself.")
+                            .positiveText("Ok");
+
+                    MaterialDialog dialog = builder.build();
+                    dialog.show();
+                }
+            }, 350);
+        }
+
+        if (runnable != null) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runnable.run();
+                }
+            }, 350);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

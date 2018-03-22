@@ -42,6 +42,7 @@
     <string name="title_activity_music">Musician</string>
     <string name="options">Options</string>
     <string name="shuffle">Shuffle</string>
+    <string name="shuffle_all">Shuffle all</string>
     <string name="album_name">Album name</string>
     <string name="elapsed_time">0.0</string>
     <string name="title_activity_drawer">Musician</string>
@@ -85,5 +86,9 @@
     <string name="sort_order_entry_number_of_songs">Number of songs</string>
     <string name="sort_order_entry_number_of_albums">Number of albums</string>
     <string name="sort_order_entry_filename">Filename</string>
+
+    <string name="songs">Songs</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Artists</string>
 
 </resources>
