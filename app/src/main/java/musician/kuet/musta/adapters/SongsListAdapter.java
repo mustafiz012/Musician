@@ -3,6 +3,7 @@ package musician.kuet.musta.adapters;
 import android.content.ContentUris;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,8 +45,9 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         this.mOnClickListener = clickListener;
     }
 
+    @NonNull
     @Override
-    public SongVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SongVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(mLayout, parent, false);
         return new SongVH(view);
     }
@@ -123,7 +125,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
         TextView songDuration;
         ImageView options;
 
-        public SongVH(View view) {
+        SongVH(View view) {
             super(view);
             song = view.findViewById(R.id.cvSongItem);
             albumArt = view.findViewById(R.id.albumArt);
