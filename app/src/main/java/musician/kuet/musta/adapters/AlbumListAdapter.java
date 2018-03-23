@@ -1,6 +1,8 @@
 package musician.kuet.musta.adapters;
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,6 +45,18 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.Item
         Album album = arrayList.get(position);
         itemHolder.title.setText(album.title);
         itemHolder.artist.setText(album.artistName);
+
+        Long albumId = album.id;
+        try {
+            Uri uri = Uri.parse("content://media/external/audio/albumart");
+            Uri albumArt = ContentUris.withAppendedId(uri, albumId);
+            Picasso.with(mContext)
+                    .load(albumArt) //song album art
+                    .placeholder(R.drawable.default_albumart)   //showing before loading art
+                    .error(R.drawable.default_albumart) //if song album art unavailable
+                    .into(itemHolder.albumArt);
+        } catch (IllegalStateException ignored) {
+        }
     }
 
     @Override
